@@ -3,22 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Property Inspection – Foxy Home Staging</title>
+  <title>Foxy Home Staging – Site Reports</title>
   <style>
     :root { color-scheme: light; }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fdf8f5; color: #2d2d2d; min-height: 100vh; }
 
     /* Header */
-    .header { background: linear-gradient(135deg, #c8697a 0%, #d4849a 100%); padding: 14px 18px; color: white; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(200,105,122,0.3); }
-    .header-left { display: flex; align-items: center; gap: 8px; }
-    .header h1 { font-size: 15px; font-weight: 700; letter-spacing: -0.2px; }
-    .header .subtitle-head { font-size: 11px; opacity: 0.85; }
+    .header { background: linear-gradient(135deg, #c8697a, #d4849a); padding: 14px 18px 0; color: white; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(200,105,122,0.3); }
+    .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
     .gear-btn { background: rgba(255,255,255,0.2); border: none; color: white; font-size: 17px; cursor: pointer; padding: 7px; border-radius: 8px; line-height: 1; }
+
+    /* Tab bar */
+    .tab-bar { display: flex; gap: 4px; }
+    .tab-btn { flex: 1; padding: 10px 8px; border: none; background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.8); font-size: 13px; font-weight: 700; cursor: pointer; border-radius: 10px 10px 0 0; transition: all 0.2s; font-family: inherit; }
+    .tab-btn.active { background: #fdf8f5; color: #c8697a; }
 
     /* Progress */
     .progress-bar { height: 3px; background: #ecddd6; }
     .progress-fill { height: 100%; background: #c8697a; transition: width 0.4s ease; }
+
+    /* Forms */
+    .form-view { display: none; }
+    .form-view.active { display: block; }
 
     /* Screens */
     .screen { display: none; padding: 16px; }
@@ -26,110 +33,104 @@
 
     /* Cards */
     .card { background: white; border-radius: 16px; padding: 18px; margin-bottom: 14px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-
-    /* Typography */
-    .step-chip { display: inline-block; background: #fdf0f2; color: #c8697a; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; margin-bottom: 10px; letter-spacing: 0.3px; text-transform: uppercase; }
+    .step-chip { display: inline-block; background: #fdf0f2; color: #c8697a; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.3px; }
     h2 { font-size: 20px; font-weight: 800; color: #1a1a1a; margin-bottom: 4px; line-height: 1.2; }
     h3 { font-size: 15px; font-weight: 700; color: #333; margin-bottom: 10px; }
     .card-sub { font-size: 13px; color: #999; margin-bottom: 18px; line-height: 1.5; }
     label { font-size: 13px; font-weight: 600; color: #555; display: block; margin-bottom: 6px; }
 
     /* Inputs */
-    input[type="text"], input[type="email"], textarea, select {
-      width: 100%; padding: 12px 14px; border: 1.5px solid #e8dfd8; border-radius: 10px;
-      font-size: 15px; font-family: inherit; background: white; color: #2d2d2d;
-      transition: border-color 0.2s; -webkit-appearance: none;
-    }
+    input[type="text"], textarea { width: 100%; padding: 12px 14px; border: 1.5px solid #e8dfd8; border-radius: 10px; font-size: 15px; font-family: inherit; background: white; color: #2d2d2d; transition: border-color 0.2s; -webkit-appearance: none; }
     input:focus, textarea:focus { outline: none; border-color: #c8697a; box-shadow: 0 0 0 3px rgba(200,105,122,0.12); }
     textarea { resize: none; height: 80px; }
     .field-group { margin-bottom: 14px; }
 
-    /* Area header */
-    .area-header { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 20px; }
-    .area-icon-wrap { width: 54px; height: 54px; border-radius: 14px; background: #fdf0f2; display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0; }
-    .area-title h2 { font-size: 19px; }
-    .area-title p { font-size: 12px; color: #aaa; line-height: 1.5; margin-top: 3px; }
-
-    /* Condition buttons */
+    /* Condition buttons (arrival) */
     .condition-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 18px; }
     .cond-btn { padding: 14px 6px 12px; border: 2px solid #e8dfd8; border-radius: 13px; background: white; cursor: pointer; text-align: center; font-size: 11px; font-weight: 700; transition: all 0.15s; line-height: 1.3; color: #888; -webkit-tap-highlight-color: transparent; }
     .cond-btn .ci { font-size: 22px; display: block; margin-bottom: 5px; }
-    .cond-btn.active-good { border-color: #4caf50; background: #f1faf2; color: #2e7d32; }
+    .cond-btn.active-good  { border-color: #4caf50; background: #f1faf2; color: #2e7d32; }
     .cond-btn.active-minor { border-color: #ff9800; background: #fff8f0; color: #c85e00; }
     .cond-btn.active-major { border-color: #ef5350; background: #fff2f2; color: #c62828; }
-    .cond-btn:active { transform: scale(0.97); }
 
-    /* Photo area */
+    /* Yes/No buttons (completion) */
+    .yn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px; }
+    .yn-btn { padding: 18px 10px 14px; border: 2px solid #e8dfd8; border-radius: 13px; background: white; cursor: pointer; text-align: center; font-size: 13px; font-weight: 700; transition: all 0.15s; line-height: 1.3; color: #888; -webkit-tap-highlight-color: transparent; }
+    .yn-btn .yi { font-size: 28px; display: block; margin-bottom: 6px; }
+    .yn-btn.active-yes { border-color: #4caf50; background: #f1faf2; color: #2e7d32; }
+    .yn-btn.active-no  { border-color: #ef5350; background: #fff2f2; color: #c62828; }
+
+    /* Question header */
+    .q-header { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 20px; }
+    .q-icon-wrap { width: 54px; height: 54px; border-radius: 14px; background: #fdf0f2; display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0; }
+    .q-title h2 { font-size: 18px; }
+    .q-title p  { font-size: 12px; color: #aaa; line-height: 1.5; margin-top: 3px; }
+
+    /* Photos */
     .photo-label-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
     .photo-count-badge { font-size: 11px; color: #c8697a; font-weight: 700; }
-    .upload-zone { border: 2px dashed #d8cfc8; border-radius: 12px; padding: 18px 12px; text-align: center; cursor: pointer; background: #fafaf8; transition: all 0.2s; }
-    .upload-zone:hover, .upload-zone:active { border-color: #c8697a; background: #fdf5f3; }
+    .upload-zone { border: 2px dashed #d8cfc8; border-radius: 12px; padding: 18px 12px; text-align: center; cursor: pointer; background: #fafaf8; }
     .upload-zone input { display: none; }
     .upload-zone .cam-icon { font-size: 30px; margin-bottom: 6px; }
     .upload-zone p { font-size: 13px; color: #aaa; margin-bottom: 10px; }
-    .upload-btn-inline { display: inline-block; background: #c8697a; color: white; border: none; padding: 9px 18px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; }
+    .upload-btn-inline { display: inline-block; background: #c8697a; color: white; border: none; padding: 9px 18px; border-radius: 8px; font-size: 13px; font-weight: 700; }
     .photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 10px; }
     .photo-thumb { position: relative; aspect-ratio: 1; }
     .photo-thumb img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; display: block; }
     .thumb-remove { position: absolute; top: 3px; right: 3px; background: rgba(0,0,0,0.65); color: white; border: none; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; font-weight: 700; }
 
-    /* Nav */
+    /* Buttons */
     .nav-row { display: flex; gap: 10px; margin-top: 16px; }
     .nav-row .btn { flex: 1; }
-
-    /* Buttons */
-    .btn { padding: 15px 16px; border: none; border-radius: 13px; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.15s; font-family: inherit; -webkit-tap-highlight-color: transparent; width: 100%; display: block; text-align: center; }
+    .btn { padding: 15px 16px; border: none; border-radius: 13px; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.15s; font-family: inherit; width: 100%; display: block; text-align: center; -webkit-tap-highlight-color: transparent; }
     .btn-primary { background: linear-gradient(135deg, #c8697a, #d4849a); color: white; box-shadow: 0 3px 10px rgba(200,105,122,0.3); }
-    .btn-primary:active { transform: scale(0.98); }
-    .btn-primary:disabled { opacity: 0.55; transform: none; cursor: default; box-shadow: none; }
-    .btn-back { background: #f0ebe6; color: #777; border: none; }
+    .btn-primary:disabled { opacity: 0.55; cursor: default; box-shadow: none; }
+    .btn-back    { background: #f0ebe6; color: #777; border: none; }
     .btn-outline { background: white; color: #c8697a; border: 2px solid #c8697a; }
 
     /* Summary */
     .summary-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 11px 0; border-bottom: 1px solid #f5efe8; gap: 12px; }
     .summary-row:last-child { border-bottom: none; }
-    .sum-label { font-size: 13px; color: #888; flex-shrink: 0; }
-    .sum-val { font-size: 13px; font-weight: 600; color: #1a1a1a; text-align: right; }
+    .sum-label { font-size: 13px; color: #888; flex-shrink: 0; max-width: 45%; }
+    .sum-val   { font-size: 13px; font-weight: 600; color: #1a1a1a; text-align: right; }
     .badge { display: inline-block; padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 700; }
-    .badge-good { background: #e8f5e9; color: #2e7d32; }
+    .badge-good  { background: #e8f5e9; color: #2e7d32; }
     .badge-minor { background: #fff3e0; color: #c85e00; }
     .badge-major { background: #ffebee; color: #c62828; }
-    .badge-na { background: #f3f3f3; color: #bbb; }
+    .badge-yes   { background: #e8f5e9; color: #2e7d32; }
+    .badge-no    { background: #ffebee; color: #c62828; }
+    .badge-na    { background: #f3f3f3; color: #bbb; }
 
     /* Success */
     .success-wrap { text-align: center; padding: 24px 0 16px; }
     .success-emoji { font-size: 60px; margin-bottom: 12px; }
     .success-title { font-size: 22px; font-weight: 800; color: #1a1a1a; margin-bottom: 6px; }
-    .success-time { font-size: 14px; color: #aaa; margin-bottom: 24px; }
+    .success-time  { font-size: 14px; color: #aaa; margin-bottom: 24px; }
     .int-row { display: flex; align-items: center; gap: 10px; padding: 12px; background: #fafaf8; border-radius: 10px; margin-bottom: 8px; font-size: 13px; }
     .dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
     .dot-loading { background: #ff9800; animation: blink 1s infinite; }
-    .dot-ok { background: #4caf50; }
+    .dot-ok  { background: #4caf50; }
     .dot-err { background: #f44336; }
     @keyframes blink { 0%,100%{opacity:1}50%{opacity:0.25} }
 
     /* Settings drawer */
     .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 300; align-items: flex-end; }
     .overlay.open { display: flex; }
-    .drawer { background: white; width: 100%; border-radius: 22px 22px 0 0; padding: 22px 18px 40px; max-height: 82vh; overflow-y: auto; }
+    .drawer { background: white; width: 100%; border-radius: 22px 22px 0 0; padding: 22px 18px 40px; max-height: 85vh; overflow-y: auto; }
     .drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
     .drawer-header h3 { font-size: 17px; font-weight: 800; margin: 0; }
     .close-btn { background: #f0ebe6; border: none; color: #888; font-size: 18px; cursor: pointer; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+    .settings-section { font-size: 11px; font-weight: 800; color: #c8697a; text-transform: uppercase; letter-spacing: 0.5px; margin: 20px 0 10px; }
     .hint { font-size: 11px; color: #bbb; margin-top: 4px; line-height: 1.5; }
-    .auth-link { display: block; color: #c8697a; font-size: 13px; font-weight: 600; text-decoration: none; margin-top: 6px; }
+    .not-configured { background: #fff8e1; border: 1px solid #ffe082; border-radius: 10px; padding: 12px 14px; font-size: 13px; color: #7a5f00; margin-bottom: 8px; }
 
     /* Spinner */
     .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.4); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 6px; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* Intro screen */
-    .brand-logo { font-size: 48px; text-align: center; margin: 8px 0 16px; }
-    .brand-name { text-align: center; font-size: 22px; font-weight: 800; color: #c8697a; margin-bottom: 4px; }
-    .brand-sub { text-align: center; font-size: 13px; color: #aaa; margin-bottom: 24px; }
-
     @media print {
-      .header, .nav-row, .btn, .overlay, .gear-btn, .progress-bar, .thumb-remove, .upload-zone { display: none !important; }
-      .screen { display: block !important; padding: 0 !important; }
+      .header, .nav-row, .btn, .overlay, .gear-btn, .progress-bar, .thumb-remove, .upload-zone, .tab-bar { display: none !important; }
+      .form-view, .screen { display: block !important; padding: 0 !important; }
       .card { box-shadow: none !important; border: 1px solid #ddd; margin-bottom: 8px; break-inside: avoid; }
       body { background: white !important; }
     }
@@ -137,398 +138,595 @@
 </head>
 <body>
 
+<!-- Header + tabs -->
 <div class="header">
-  <div class="header-left">
+  <div class="header-top">
     <div>
-      <div class="h1" style="font-size:15px;font-weight:800;color:white">🏡 Property Inspection</div>
-      <div class="subtitle-head" style="font-size:11px;color:rgba(255,255,255,0.85)">Foxy Home Staging</div>
+      <div style="font-size:15px;font-weight:800;color:white">🏡 Foxy Home Staging</div>
+      <div style="font-size:11px;color:rgba(255,255,255,0.85)" id="headerSub">Site Reports</div>
     </div>
+    <button class="gear-btn" onclick="openSettings()">⚙️</button>
   </div>
-  <button class="gear-btn" onclick="openSettings()">⚙️</button>
+  <div class="tab-bar">
+    <button class="tab-btn active" id="tab-arrival"    onclick="switchForm('arrival')">🚚 Arrival Report</button>
+    <button class="tab-btn"        id="tab-completion" onclick="switchForm('completion')">✅ Completion Report</button>
+  </div>
 </div>
 <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
 
 <!-- Settings Drawer -->
-<div class="overlay" id="settingsOverlay" onclick="overlayClick(event)">
+<div class="overlay" id="settingsOverlay" onclick="overlayClickHandler(event)">
   <div class="drawer">
     <div class="drawer-header">
       <h3>⚙️ Settings</h3>
       <button class="close-btn" onclick="closeSettings()">×</button>
     </div>
+    <div class="settings-section">🚚 Arrival Report</div>
     <div class="field-group">
-      <label>Slack Channel ID</label>
-      <input type="text" id="cfgSlack" value="C07H3EG54KW">
-      <div class="hint">#pre-existing-damage is pre-filled. Change if needed. Find channel IDs in Slack → channel details → copy link.</div>
+      <label>Webhook URL</label>
+      <input type="text" id="cfgArrivalWebhook" placeholder="Apps Script web app URL">
+      <div class="hint">Handles Slack posting to #pre-existing-damage and logs to the Inspections sheet tab.</div>
     </div>
-    <div class="field-group" style="margin-top:14px">
-      <label>Google Sheet ID</label>
-      <input type="text" id="cfgSheetId" placeholder="Paste from Sheet URL">
-      <div class="hint">Open your Google Sheet → the URL contains /d/<strong>[THIS PART]</strong>/edit — paste that here.</div>
-      <a class="auth-link" href="https://mcp.zapier.com/mcp/servers/5743c754-3840-4f2b-8820-04152b4e24aa/app-auth/GoogleSheetsV2CLIAPI" target="_blank">🔗 Connect Google Sheets via Zapier →</a>
-    </div>
-    <div class="field-group" style="margin-top:14px">
-      <label>Worksheet / Tab Name</label>
-      <input type="text" id="cfgWorksheet" value="Inspections">
-      <div class="hint">Name the sheet tab exactly (case-sensitive). Create a tab called "Inspections" in your Google Sheet.</div>
+    <div class="settings-section">✅ Completion Report</div>
+    <div class="field-group">
+      <label>Webhook URL</label>
+      <input type="text" id="cfgCompletionWebhook" placeholder="Apps Script web app URL (can be same)">
+      <div class="hint">Handles Slack posting to your completion channel and logs to the Completions sheet tab.</div>
     </div>
     <button class="btn btn-primary" style="margin-top:20px" onclick="saveSettings()">Save Settings</button>
   </div>
 </div>
 
-<!-- SCREEN 0: Intro / Property Details -->
-<div class="screen active" id="screen-0">
-  <div class="brand-logo">🦊</div>
-  <div class="brand-name">Foxy Home Staging</div>
-  <div class="brand-sub">Pre-Existing Damage Report</div>
-  <div class="card">
-    <div class="step-chip">Step 1 of 8</div>
-    <h2>Property Details</h2>
-    <p class="card-sub">Fill in the address and your name. The time is captured automatically as your estimated arrival.</p>
-    <div class="field-group">
-      <label>Property Address</label>
-      <input type="text" id="propAddress" placeholder="123 Example St, Suburb VIC 3000">
-    </div>
-    <div class="field-group" style="margin-top:14px">
-      <label>Your Name</label>
-      <input type="text" id="propName" placeholder="Team member name">
-    </div>
-    <div class="field-group" style="margin-top:14px">
-      <label>Arrival Time (auto)</label>
-      <input type="text" id="propTime" readonly style="background:#fafaf8;color:#888">
-    </div>
-  </div>
-  <button class="btn btn-primary" onclick="beginInspection()">Begin Inspection →</button>
-</div>
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- ARRIVAL FORM                                               -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="form-view active" id="form-arrival">
 
-<!-- SCREENS 1–6: Inspection Areas (built by JS) -->
-
-<!-- SCREEN 7: Summary -->
-<div class="screen" id="screen-7">
-  <div class="card">
-    <div class="step-chip">Final Step</div>
-    <h2>Review & Submit</h2>
-    <p class="card-sub">Check everything looks right, then submit to post to Slack and log to Google Sheets.</p>
-    <div id="summaryContent"></div>
-  </div>
-  <button class="btn btn-primary" id="submitBtn" onclick="submitReport()">Submit Report ✓</button>
-  <div style="margin-top:8px">
-    <button class="btn btn-back" onclick="goTo(6)">← Back</button>
-  </div>
-</div>
-
-<!-- SCREEN 8: Success -->
-<div class="screen" id="screen-8">
-  <div class="card">
-    <div class="success-wrap">
-      <div class="success-emoji">🎉</div>
-      <div class="success-title">Report Submitted!</div>
-      <div class="success-time" id="successTime"></div>
+  <!-- A-0: Property details -->
+  <div class="screen active" id="a-screen-0">
+    <div style="font-size:48px;text-align:center;margin:8px 0 16px">🦊</div>
+    <div style="text-align:center;font-size:22px;font-weight:800;color:#c8697a;margin-bottom:4px">Pre-Existing Damage</div>
+    <div style="text-align:center;font-size:13px;color:#aaa;margin-bottom:24px">Complete on arrival at the property</div>
+    <div class="card">
+      <div class="step-chip">Step 1 of 8</div>
+      <h2>Property Details</h2>
+      <p class="card-sub">Fill in the address and your name. Arrival time is captured automatically.</p>
+      <div class="field-group">
+        <label>Property Address</label>
+        <input type="text" id="a-propAddress" placeholder="123 Example St, Suburb VIC 3000">
+      </div>
+      <div class="field-group" style="margin-top:14px">
+        <label>Your Name</label>
+        <input type="text" id="a-propName" placeholder="Team member name">
+      </div>
+      <div class="field-group" style="margin-top:14px">
+        <label>Arrival Time (auto)</label>
+        <input type="text" id="a-propTime" readonly style="background:#fafaf8;color:#888">
+      </div>
     </div>
-    <h3>Integrations</h3>
-    <div id="intStatuses"></div>
+    <button class="btn btn-primary" onclick="aBegin()">Begin Inspection →</button>
   </div>
-  <button class="btn btn-outline" style="margin-top:8px" onclick="window.print()">🖨️ Save as PDF</button>
-  <div style="margin-top:8px">
-    <button class="btn btn-back" onclick="startOver()">+ New Inspection</button>
+
+  <!-- A-1 to A-6: Area screens (built by JS) -->
+
+  <!-- A-7: Summary -->
+  <div class="screen" id="a-screen-7">
+    <div class="card">
+      <div class="step-chip">Final Step</div>
+      <h2>Review & Submit</h2>
+      <p class="card-sub">Check everything looks right then submit.</p>
+      <div id="a-summaryContent"></div>
+    </div>
+    <button class="btn btn-primary" id="a-submitBtn" onclick="aSubmit()">Submit Report ✓</button>
+    <div style="margin-top:8px"><button class="btn btn-back" onclick="aGoTo(6)">← Back</button></div>
   </div>
-</div>
+
+  <!-- A-8: Success -->
+  <div class="screen" id="a-screen-8">
+    <div class="card">
+      <div class="success-wrap">
+        <div class="success-emoji">🎉</div>
+        <div class="success-title">Arrival Report Sent!</div>
+        <div class="success-time" id="a-successTime"></div>
+      </div>
+      <h3>Integrations</h3>
+      <div id="a-intStatuses"></div>
+    </div>
+    <button class="btn btn-outline" style="margin-top:8px" onclick="window.print()">🖨️ Save as PDF</button>
+    <div style="margin-top:8px"><button class="btn btn-back" onclick="aStartOver()">+ New Arrival Report</button></div>
+  </div>
+
+</div><!-- /form-arrival -->
+
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- COMPLETION FORM                                            -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="form-view" id="form-completion">
+
+  <!-- C-0: Property details -->
+  <div class="screen active" id="c-screen-0">
+    <div style="font-size:48px;text-align:center;margin:8px 0 16px">✅</div>
+    <div style="text-align:center;font-size:22px;font-weight:800;color:#c8697a;margin-bottom:4px">Install Complete</div>
+    <div style="text-align:center;font-size:13px;color:#aaa;margin-bottom:24px">Final walkthrough — complete before leaving</div>
+    <div class="card">
+      <div class="step-chip">Step 1 of 7</div>
+      <h2>Property Details</h2>
+      <p class="card-sub">Fill in the address and your name. Completion time is captured automatically.</p>
+      <div class="field-group">
+        <label>Property Address</label>
+        <input type="text" id="c-propAddress" placeholder="123 Example St, Suburb VIC 3000">
+      </div>
+      <div class="field-group" style="margin-top:14px">
+        <label>Your Name</label>
+        <input type="text" id="c-propName" placeholder="Team member name">
+      </div>
+      <div class="field-group" style="margin-top:14px">
+        <label>Completion Time (auto)</label>
+        <input type="text" id="c-propTime" readonly style="background:#fafaf8;color:#888">
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="cBegin()">Begin Walkthrough →</button>
+  </div>
+
+  <!-- C-1 to C-5: Question screens (built by JS) -->
+
+  <!-- C-6: Summary -->
+  <div class="screen" id="c-screen-6">
+    <div class="card">
+      <div class="step-chip">Final Step</div>
+      <h2>Review & Submit</h2>
+      <p class="card-sub">Check everything looks right then submit.</p>
+      <div id="c-summaryContent"></div>
+    </div>
+    <button class="btn btn-primary" id="c-submitBtn" onclick="cSubmit()">Submit Report ✓</button>
+    <div style="margin-top:8px"><button class="btn btn-back" onclick="cGoTo(5)">← Back</button></div>
+  </div>
+
+  <!-- C-7: Success -->
+  <div class="screen" id="c-screen-7">
+    <div class="card">
+      <div class="success-wrap">
+        <div class="success-emoji">🏆</div>
+        <div class="success-title">Completion Report Sent!</div>
+        <div class="success-time" id="c-successTime"></div>
+      </div>
+      <h3>Integrations</h3>
+      <div id="c-intStatuses"></div>
+    </div>
+    <button class="btn btn-outline" style="margin-top:8px" onclick="window.print()">🖨️ Save as PDF</button>
+    <div style="margin-top:8px"><button class="btn btn-back" onclick="cStartOver()">+ New Completion Report</button></div>
+  </div>
+
+</div><!-- /form-completion -->
+
 
 <script>
-  const AREAS = [
-    { id: 'walls',      name: 'Main Walls',         icon: '🧱', hint: 'Check all walls for marks, scuffs, holes, crayon or stains. Include feature walls.' },
-    { id: 'stairwell',  name: 'Stairwell',           icon: '🪜', hint: 'Inspect stair treads, risers, handrail, balusters and surrounding walls.' },
-    { id: 'flooring',   name: 'Flooring',            icon: '🏠', hint: 'Check all hard flooring (timber, vinyl, tiles) for scratches, chips or lifting.' },
-    { id: 'tiles',      name: 'Broken Tiles',        icon: '🔲', hint: 'Look for cracked, chipped or missing tiles in kitchen, bathrooms, laundry and entry.' },
-    { id: 'benchtops',  name: 'Kitchen Benchtops',   icon: '🍳', hint: 'Inspect all benchtops for scratches, burns, chips, lifting laminate or stains.' },
-    { id: 'carpet',     name: 'Carpet',              icon: '🛋️', hint: 'Check all carpeted areas for stains, tears, snags or worn/flat patches.' },
-  ];
+// ─────────────────────────────────────────────────────────────
+// SETTINGS
+// ─────────────────────────────────────────────────────────────
+function cfg() {
+  return {
+    arrivalWebhook:    localStorage.getItem('cfg_arrival_webhook')    || '',
+    completionWebhook: localStorage.getItem('cfg_completion_webhook') || '',
+  };
+}
+function openSettings() {
+  const c = cfg();
+  document.getElementById('cfgArrivalWebhook').value    = c.arrivalWebhook;
+  document.getElementById('cfgCompletionWebhook').value = c.completionWebhook;
+  document.getElementById('settingsOverlay').classList.add('open');
+}
+function closeSettings() { document.getElementById('settingsOverlay').classList.remove('open'); }
+function overlayClickHandler(e) { if (e.target === document.getElementById('settingsOverlay')) closeSettings(); }
+function saveSettings() {
+  localStorage.setItem('cfg_arrival_webhook',    document.getElementById('cfgArrivalWebhook').value.trim());
+  localStorage.setItem('cfg_completion_webhook', document.getElementById('cfgCompletionWebhook').value.trim());
+  closeSettings();
+}
 
-  let currentScreen = 0;
-  let data = {};          // area id -> { condition, notes }
-  let photos = {};        // area id -> [dataURL, ...]
-  let arrivalTime = null;
+// ─────────────────────────────────────────────────────────────
+// TAB SWITCHING
+// ─────────────────────────────────────────────────────────────
+let activeForm = 'arrival';
+function switchForm(form) {
+  activeForm = form;
+  document.querySelectorAll('.form-view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(`form-${form}`).classList.add('active');
+  document.getElementById(`tab-${form}`).classList.add('active');
+  document.getElementById('headerSub').textContent = form === 'arrival' ? 'Arrival Report' : 'Completion Report';
+  document.getElementById('progressFill').style.width = '0%';
+}
 
-  // ── Settings ────────────────────────────────────────────────────────
-  function cfg() {
-    return {
-      slack: localStorage.getItem('cfg_slack') || 'C07H3EG54KW',
-      sheetId: localStorage.getItem('cfg_sheetId') || '',
-      worksheet: localStorage.getItem('cfg_worksheet') || 'Inspections',
-    };
-  }
-  function openSettings() {
-    const c = cfg();
-    document.getElementById('cfgSlack').value = c.slack;
-    document.getElementById('cfgSheetId').value = c.sheetId;
-    document.getElementById('cfgWorksheet').value = c.worksheet;
-    document.getElementById('settingsOverlay').classList.add('open');
-  }
-  function closeSettings() { document.getElementById('settingsOverlay').classList.remove('open'); }
-  function overlayClick(e) { if (e.target === document.getElementById('settingsOverlay')) closeSettings(); }
-  function saveSettings() {
-    localStorage.setItem('cfg_slack', document.getElementById('cfgSlack').value.trim());
-    localStorage.setItem('cfg_sheetId', document.getElementById('cfgSheetId').value.trim());
-    localStorage.setItem('cfg_worksheet', document.getElementById('cfgWorksheet').value.trim());
-    closeSettings();
-  }
-
-  // ── Build area screens ───────────────────────────────────────────────
-  function buildScreens() {
-    const ref = document.getElementById('screen-7');
-    AREAS.forEach((area, i) => {
-      photos[area.id] = [];
-      data[area.id] = { condition: null, notes: '' };
-      const el = document.createElement('div');
-      el.className = 'screen';
-      el.id = `screen-${i + 1}`;
-      el.innerHTML = `
-        <div class="card">
-          <div class="step-chip">Step ${i + 2} of 8</div>
-          <div class="area-header">
-            <div class="area-icon-wrap">${area.icon}</div>
-            <div class="area-title">
-              <h2>${area.name}</h2>
-              <p>${area.hint}</p>
-            </div>
-          </div>
-
-          <label style="margin-bottom:8px">Condition</label>
-          <div class="condition-row">
-            <button class="cond-btn" id="cb-${area.id}-good"  onclick="setCondition('${area.id}','good')">
-              <span class="ci">✅</span>Good
-            </button>
-            <button class="cond-btn" id="cb-${area.id}-minor" onclick="setCondition('${area.id}','minor')">
-              <span class="ci">⚠️</span>Minor Damage
-            </button>
-            <button class="cond-btn" id="cb-${area.id}-major" onclick="setCondition('${area.id}','major')">
-              <span class="ci">🚨</span>Major Damage
-            </button>
-          </div>
-
-          <label>Notes</label>
-          <textarea id="notes-${area.id}" placeholder="Describe damage location and extent..."></textarea>
-
-          <div style="margin-top:16px">
-            <div class="photo-label-row">
-              <label style="margin:0">Photos</label>
-              <span class="photo-count-badge" id="photoCount-${area.id}"></span>
-            </div>
-            <div class="upload-zone" onclick="document.getElementById('fi-${area.id}').click()">
-              <input type="file" id="fi-${area.id}" multiple accept="image/*" capture="environment" onchange="addPhotos('${area.id}',this)">
-              <div class="cam-icon">📷</div>
-              <p>Tap to take or upload photos</p>
-              <span class="upload-btn-inline">Add Photos</span>
-            </div>
-            <div class="photo-grid" id="pg-${area.id}"></div>
-          </div>
-        </div>
-        <div class="nav-row">
-          <button class="btn btn-back" onclick="goTo(${i})">← Back</button>
-          <button class="btn btn-primary" onclick="goTo(${i + 2})">Next →</button>
-        </div>
-      `;
-      ref.parentNode.insertBefore(el, ref);
-    });
-  }
-  buildScreens();
-
-  // ── Condition selection ──────────────────────────────────────────────
-  function setCondition(areaId, val) {
-    data[areaId].condition = val;
-    ['good','minor','major'].forEach(c => {
-      const b = document.getElementById(`cb-${areaId}-${c}`);
-      b.className = 'cond-btn' + (c === val ? ` active-${c}` : '');
-    });
-  }
-
-  // ── Photos ───────────────────────────────────────────────────────────
-  function addPhotos(areaId, input) {
+// ─────────────────────────────────────────────────────────────
+// SHARED: photos + progress
+// ─────────────────────────────────────────────────────────────
+function makePhotoHandlers(prefix) {
+  const photos = {};
+  function add(id, input) {
+    if (!photos[id]) photos[id] = [];
     Array.from(input.files).forEach(file => {
-      const reader = new FileReader();
-      reader.onload = e => { photos[areaId].push(e.target.result); renderGrid(areaId); };
-      reader.readAsDataURL(file);
+      const r = new FileReader();
+      r.onload = e => { photos[id].push(e.target.result); render(id); };
+      r.readAsDataURL(file);
     });
     input.value = '';
   }
-  function removePhoto(areaId, idx) { photos[areaId].splice(idx, 1); renderGrid(areaId); }
-  function renderGrid(areaId) {
-    const pg = document.getElementById(`pg-${areaId}`);
-    const cb = document.getElementById(`photoCount-${areaId}`);
-    const n = photos[areaId].length;
-    cb.textContent = n ? `${n} photo${n !== 1 ? 's' : ''}` : '';
-    pg.innerHTML = photos[areaId].map((src, i) => `
+  function remove(id, idx) { photos[id].splice(idx, 1); render(id); }
+  function render(id) {
+    const n = (photos[id] || []).length;
+    const cb = document.getElementById(`${prefix}photoCount-${id}`);
+    const pg = document.getElementById(`${prefix}pg-${id}`);
+    if (cb) cb.textContent = n ? `${n} photo${n!==1?'s':''}` : '';
+    if (pg) pg.innerHTML = (photos[id] || []).map((src, i) => `
       <div class="photo-thumb">
         <img src="${src}" alt="">
-        <button class="thumb-remove" onclick="removePhoto('${areaId}',${i})">×</button>
-      </div>
-    `).join('');
+        <button class="thumb-remove" onclick="${prefix}removePhoto('${id}',${i})">×</button>
+      </div>`).join('');
   }
+  function count(id) { return (photos[id] || []).length; }
+  function init(id) { if (!photos[id]) photos[id] = []; }
+  return { add, remove, render, count, init, photos };
+}
 
-  // ── Navigation ───────────────────────────────────────────────────────
-  function goTo(n) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById(`screen-${n}`).classList.add('active');
-    currentScreen = n;
-    const pct = (n / 8) * 100;
-    document.getElementById('progressFill').style.width = pct + '%';
-    window.scrollTo(0, 0);
-    if (n === 7) buildSummary();
-  }
+function updateProgress(current, total) {
+  document.getElementById('progressFill').style.width = ((current / total) * 100) + '%';
+}
 
-  // ── Arrival time ─────────────────────────────────────────────────────
-  function setArrivalTime() {
-    arrivalTime = new Date();
-    const fmt = arrivalTime.toLocaleString('en-AU', {
-      weekday: 'short', day: 'numeric', month: 'short', year: 'numeric',
-      hour: '2-digit', minute: '2-digit'
-    });
-    document.getElementById('propTime').value = fmt;
-  }
-  setArrivalTime();
+function sendToWebhook(url, payload) {
+  return fetch(url, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(payload) });
+}
 
-  // ── Begin inspection ─────────────────────────────────────────────────
-  function beginInspection() {
-    const addr = document.getElementById('propAddress').value.trim();
-    const name = document.getElementById('propName').value.trim();
-    if (!addr) { alert('Please enter the property address.'); return; }
-    if (!name) { alert('Please enter your name.'); return; }
-    goTo(1);
-  }
+// ─────────────────────────────────────────────────────────────
+// ARRIVAL FORM
+// ─────────────────────────────────────────────────────────────
+const AREAS = [
+  { id: 'walls',     name: 'Main Walls',       icon: '🧱', hint: 'Check all walls for marks, scuffs, holes or stains.' },
+  { id: 'stairwell', name: 'Stairwell',         icon: '🪜', hint: 'Inspect treads, risers, handrail and surrounding walls.' },
+  { id: 'flooring',  name: 'Flooring',          icon: '🏠', hint: 'Check all hard flooring for scratches or chips.' },
+  { id: 'tiles',     name: 'Broken Tiles',      icon: '🔲', hint: 'Look for cracked or missing tiles throughout.' },
+  { id: 'benchtops', name: 'Kitchen Benchtops', icon: '🍳', hint: 'Inspect for scratches, burns, chips or stains.' },
+  { id: 'carpet',    name: 'Carpet',            icon: '🛋️', hint: 'Check for stains, tears or worn patches.' },
+];
 
-  // ── Summary ──────────────────────────────────────────────────────────
-  function condBadge(c) {
-    if (!c) return '<span class="badge badge-na">Not checked</span>';
-    return {
-      good:  '<span class="badge badge-good">✅ Good</span>',
-      minor: '<span class="badge badge-minor">⚠️ Minor</span>',
-      major: '<span class="badge badge-major">🚨 Major</span>',
-    }[c];
-  }
-  function buildSummary() {
-    AREAS.forEach(a => { data[a.id].notes = document.getElementById(`notes-${a.id}`)?.value || ''; });
-    const addr = document.getElementById('propAddress').value;
-    const name = document.getElementById('propName').value;
-    const time = document.getElementById('propTime').value;
+let aData   = {};
+const aP    = makePhotoHandlers('a-');
+let aCurrent = 0;
 
-    let html = `
-      <div class="summary-row"><span class="sum-label">Property</span><span class="sum-val">${addr}</span></div>
-      <div class="summary-row"><span class="sum-label">Inspector</span><span class="sum-val">${name}</span></div>
-      <div class="summary-row"><span class="sum-label">Arrival Time</span><span class="sum-val">${time}</span></div>
-    `;
-    AREAS.forEach(area => {
-      const d = data[area.id];
-      const n = photos[area.id].length;
-      html += `
-        <div class="summary-row">
-          <span class="sum-label">${area.icon} ${area.name}</span>
-          <span class="sum-val">
-            ${condBadge(d.condition)}
-            ${n ? `<br><span style="font-size:11px;color:#aaa;font-weight:400">${n} photo${n!==1?'s':''}</span>` : ''}
-            ${d.notes ? `<br><span style="font-size:11px;color:#666;font-weight:400">${d.notes}</span>` : ''}
-          </span>
+window.aRemovePhoto = (id, idx) => { aP.remove(id, idx); };
+
+function aBuildScreens() {
+  const ref = document.getElementById('a-screen-7');
+  AREAS.forEach((area, i) => {
+    aP.init(area.id);
+    aData[area.id] = { condition: null, notes: '' };
+    const el = document.createElement('div');
+    el.className = 'screen';
+    el.id = `a-screen-${i + 1}`;
+    el.innerHTML = `
+      <div class="card">
+        <div class="step-chip">Step ${i + 2} of 8</div>
+        <div class="q-header">
+          <div class="q-icon-wrap">${area.icon}</div>
+          <div class="q-title"><h2>${area.name}</h2><p>${area.hint}</p></div>
         </div>
-      `;
-    });
-    document.getElementById('summaryContent').innerHTML = html;
-  }
+        <label style="margin-bottom:8px">Condition</label>
+        <div class="condition-row">
+          <button class="cond-btn" id="a-cb-${area.id}-good"  onclick="aSetCond('${area.id}','good')"><span class="ci">✅</span>Good</button>
+          <button class="cond-btn" id="a-cb-${area.id}-minor" onclick="aSetCond('${area.id}','minor')"><span class="ci">⚠️</span>Minor Damage</button>
+          <button class="cond-btn" id="a-cb-${area.id}-major" onclick="aSetCond('${area.id}','major')"><span class="ci">🚨</span>Major Damage</button>
+        </div>
+        <label>Notes</label>
+        <textarea id="a-notes-${area.id}" placeholder="Describe damage location and extent..."></textarea>
+        <div style="margin-top:16px">
+          <div class="photo-label-row">
+            <label style="margin:0">Photos</label>
+            <span class="photo-count-badge" id="a-photoCount-${area.id}"></span>
+          </div>
+          <div class="upload-zone" onclick="document.getElementById('a-fi-${area.id}').click()">
+            <input type="file" id="a-fi-${area.id}" multiple accept="image/*" capture="environment" onchange="aP.add('${area.id}',this)">
+            <div class="cam-icon">📷</div>
+            <p>Tap to take or upload photos</p>
+            <span class="upload-btn-inline">Add Photos</span>
+          </div>
+          <div class="photo-grid" id="a-pg-${area.id}"></div>
+        </div>
+      </div>
+      <div class="nav-row">
+        <button class="btn btn-back" onclick="aGoTo(${i})">← Back</button>
+        <button class="btn btn-primary" onclick="aGoTo(${i + 2})">Next →</button>
+      </div>`;
+    ref.parentNode.insertBefore(el, ref);
+  });
+}
+aBuildScreens();
 
-  // ── Submit ───────────────────────────────────────────────────────────
-  async function submitReport() {
-    const btn = document.getElementById('submitBtn');
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span>Submitting…';
+function aSetCond(id, val) {
+  aData[id].condition = val;
+  ['good','minor','major'].forEach(c => {
+    document.getElementById(`a-cb-${id}-${c}`).className = 'cond-btn' + (c === val ? ` active-${c}` : '');
+  });
+}
 
-    const addr  = document.getElementById('propAddress').value;
-    const name  = document.getElementById('propName').value;
-    const time  = document.getElementById('propTime').value;
-    AREAS.forEach(a => { data[a.id].notes = document.getElementById(`notes-${a.id}`)?.value || ''; });
+function aGoTo(n) {
+  document.querySelectorAll('#form-arrival .screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(`a-screen-${n}`).classList.add('active');
+  aCurrent = n;
+  updateProgress(n, 8);
+  window.scrollTo(0, 0);
+  if (n === 7) aBuildSummary();
+}
 
-    goTo(8);
-    document.getElementById('successTime').textContent =
-      `Completed at ${new Date().toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'})}`;
+function aSetTime() {
+  document.getElementById('a-propTime').value = new Date().toLocaleString('en-AU', {
+    weekday:'short', day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit'
+  });
+}
+aSetTime();
 
-    const statEl = document.getElementById('intStatuses');
-    statEl.innerHTML = `
-      <div class="int-row" id="slack-row"><div class="dot dot-loading" id="slack-dot"></div><span id="slack-txt">Posting to #pre-existing-damage…</span></div>
-      <div class="int-row" id="sheets-row"><div class="dot dot-loading" id="sheets-dot"></div><span id="sheets-txt">Adding to Google Sheets…</span></div>
+function aBegin() {
+  if (!document.getElementById('a-propAddress').value.trim()) { alert('Please enter the property address.'); return; }
+  if (!document.getElementById('a-propName').value.trim())    { alert('Please enter your name.'); return; }
+  aGoTo(1);
+}
+
+function condBadge(c) {
+  if (!c) return '<span class="badge badge-na">Not checked</span>';
+  return { good:'<span class="badge badge-good">✅ Good</span>', minor:'<span class="badge badge-minor">⚠️ Minor</span>', major:'<span class="badge badge-major">🚨 Major</span>' }[c];
+}
+
+function aBuildSummary() {
+  AREAS.forEach(a => { aData[a.id].notes = document.getElementById(`a-notes-${a.id}`)?.value || ''; });
+  let html = `
+    <div class="summary-row"><span class="sum-label">Property</span><span class="sum-val">${document.getElementById('a-propAddress').value}</span></div>
+    <div class="summary-row"><span class="sum-label">Inspector</span><span class="sum-val">${document.getElementById('a-propName').value}</span></div>
+    <div class="summary-row"><span class="sum-label">Arrival Time</span><span class="sum-val">${document.getElementById('a-propTime').value}</span></div>
+  `;
+  AREAS.forEach(area => {
+    const d = aData[area.id], n = aP.count(area.id);
+    html += `<div class="summary-row">
+      <span class="sum-label">${area.icon} ${area.name}</span>
+      <span class="sum-val">${condBadge(d.condition)}
+        ${n ? `<br><small style="color:#aaa;font-weight:400">${n} photo${n!==1?'s':''}</small>` : ''}
+        ${d.notes ? `<br><small style="color:#666;font-weight:400">${d.notes}</small>` : ''}
+      </span></div>`;
+  });
+  document.getElementById('a-summaryContent').innerHTML = html;
+}
+
+async function aSubmit() {
+  const btn = document.getElementById('a-submitBtn');
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>Submitting…';
+  AREAS.forEach(a => { aData[a.id].notes = document.getElementById(`a-notes-${a.id}`)?.value || ''; });
+  const payload = {
+    formType:    'arrival',
+    address:     document.getElementById('a-propAddress').value,
+    inspector:   document.getElementById('a-propName').value,
+    arrivalTime: document.getElementById('a-propTime').value,
+    areas:       Object.fromEntries(AREAS.map(a => [a.id, aData[a.id].condition || ''])),
+    photoCounts: Object.fromEntries(AREAS.map(a => [a.id, aP.count(a.id)])),
+    majorDamage: AREAS.filter(a => aData[a.id].condition === 'major').map(a => a.name).join(', ') || 'None',
+    minorDamage: AREAS.filter(a => aData[a.id].condition === 'minor').map(a => a.name).join(', ') || 'None',
+    notes:       AREAS.map(a => aData[a.id].notes ? `${a.name}: ${aData[a.id].notes}` : '').filter(Boolean).join(' | '),
+  };
+  aGoTo(8);
+  document.getElementById('a-successTime').textContent = `Completed at ${new Date().toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'})}`;
+  await postReport('a-intStatuses', cfg().arrivalWebhook, payload);
+}
+
+function aStartOver() {
+  AREAS.forEach(a => {
+    aData[a.id] = { condition: null, notes: '' };
+    aP.photos[a.id] = []; aP.render(a.id);
+    ['good','minor','major'].forEach(c => { const b = document.getElementById(`a-cb-${a.id}-${c}`); if(b) b.className='cond-btn'; });
+    const ta = document.getElementById(`a-notes-${a.id}`); if(ta) ta.value='';
+  });
+  document.getElementById('a-propAddress').value = '';
+  document.getElementById('a-propName').value = '';
+  document.getElementById('a-submitBtn').disabled = false;
+  document.getElementById('a-submitBtn').textContent = 'Submit Report ✓';
+  aSetTime(); aGoTo(0);
+}
+
+
+// ─────────────────────────────────────────────────────────────
+// COMPLETION FORM
+// ─────────────────────────────────────────────────────────────
+const QUESTIONS = [
+  { id: 'patchpaint', name: 'Patch & Paint',       icon: '🖌️', question: 'Were there any patch and paints required?',         hint: 'Select Yes and note the location if any walls needed patching.',       type: 'yesno' },
+  { id: 'damage',     name: 'Property Damage',      icon: '⚠️', question: 'Did we damage the property at all?',                hint: 'Be honest — note the location and nature of any damage caused.',       type: 'yesno' },
+  { id: 'secured',    name: 'House Secured',        icon: '🔒', question: 'Have you secured the house?',                       hint: 'Confirm both the back door and front door are locked.',                type: 'yesno' },
+  { id: 'lights',     name: 'Lights & Air Con',     icon: '💡', question: 'Have you turned off the lights and air conditioning?', hint: 'Check all rooms including garage and outdoor lights.',               type: 'yesno' },
+  { id: 'keys',       name: 'Keys Location',        icon: '🔑', question: 'Where have you left the keys?',                    hint: 'Describe exactly where the keys are — lockbox, letterbox, with agent etc.', type: 'text' },
+];
+
+let cData    = {};
+const cP     = makePhotoHandlers('c-');
+let cCurrent = 0;
+
+window.cRemovePhoto = (id, idx) => { cP.remove(id, idx); };
+
+function cBuildScreens() {
+  const ref = document.getElementById('c-screen-6');
+  QUESTIONS.forEach((q, i) => {
+    cP.init(q.id);
+    cData[q.id] = { answer: null, notes: '', text: '' };
+    const el = document.createElement('div');
+    el.className = 'screen';
+    el.id = `c-screen-${i + 1}`;
+
+    const answerBlock = q.type === 'yesno' ? `
+      <div class="yn-row">
+        <button class="yn-btn" id="c-yn-${q.id}-yes" onclick="cSetAnswer('${q.id}','yes')"><span class="yi">✅</span>Yes</button>
+        <button class="yn-btn" id="c-yn-${q.id}-no"  onclick="cSetAnswer('${q.id}','no')"><span class="yi">❌</span>No</button>
+      </div>
+      <label>Notes <span style="font-weight:400;color:#bbb">(optional)</span></label>
+      <textarea id="c-notes-${q.id}" placeholder="Add any details here..."></textarea>
+    ` : `
+      <label>Location / Details</label>
+      <input type="text" id="c-text-${q.id}" placeholder="e.g. Lockbox on front gate, code 1234">
+      <div style="margin-top:12px"></div>
+      <label>Notes <span style="font-weight:400;color:#bbb">(optional)</span></label>
+      <textarea id="c-notes-${q.id}" placeholder="Any additional details..."></textarea>
     `;
 
-    // Build Slack message
-    const lines = AREAS.map(a => {
-      const d = data[a.id];
-      const e = d.condition === 'good' ? '✅' : d.condition === 'minor' ? '⚠️' : d.condition === 'major' ? '🚨' : '◻️';
-      const c = d.condition ? d.condition.charAt(0).toUpperCase() + d.condition.slice(1) : 'Not checked';
-      const note = d.notes ? ` — _${d.notes}_` : '';
-      const pics = photos[a.id].length ? ` _(${photos[a.id].length} photo${photos[a.id].length!==1?'s':''})_` : '';
-      return `${e} *${a.name}*: ${c}${note}${pics}`;
-    }).join('\n');
+    el.innerHTML = `
+      <div class="card">
+        <div class="step-chip">Step ${i + 2} of 7</div>
+        <div class="q-header">
+          <div class="q-icon-wrap">${q.icon}</div>
+          <div class="q-title"><h2>${q.question}</h2><p>${q.hint}</p></div>
+        </div>
+        ${answerBlock}
+        <div style="margin-top:16px">
+          <div class="photo-label-row">
+            <label style="margin:0">Photos <span style="font-weight:400;color:#bbb">(optional)</span></label>
+            <span class="photo-count-badge" id="c-photoCount-${q.id}"></span>
+          </div>
+          <div class="upload-zone" onclick="document.getElementById('c-fi-${q.id}').click()">
+            <input type="file" id="c-fi-${q.id}" multiple accept="image/*" capture="environment" onchange="cP.add('${q.id}',this)">
+            <div class="cam-icon">📷</div>
+            <p>Tap to take or upload photos</p>
+            <span class="upload-btn-inline">Add Photos</span>
+          </div>
+          <div class="photo-grid" id="c-pg-${q.id}"></div>
+        </div>
+      </div>
+      <div class="nav-row">
+        <button class="btn btn-back" onclick="cGoTo(${i})">← Back</button>
+        <button class="btn btn-primary" onclick="cGoTo(${i + 2})">Next →</button>
+      </div>`;
+    ref.parentNode.insertBefore(el, ref);
+  });
+}
+cBuildScreens();
 
-    const msg = `🏡 *Pre-Existing Damage Report*\n📍 *${addr}*\n👤 ${name}  |  🕐 Arrived ${time}\n\n${lines}`;
+function cSetAnswer(id, val) {
+  cData[id].answer = val;
+  ['yes','no'].forEach(v => {
+    document.getElementById(`c-yn-${id}-${v}`).className = 'yn-btn' + (v === val ? ` active-${v}` : '');
+  });
+}
 
-    // Slack
-    try {
-      await window.cowork.callMcpTool(
-        'mcp__19350395-0ad9-42a3-a436-224e2082ae00__slack_send_message',
-        { channel_id: cfg().slack, text: msg }
-      );
-      document.getElementById('slack-dot').className = 'dot dot-ok';
-      document.getElementById('slack-txt').textContent = 'Posted to #pre-existing-damage ✓';
-    } catch(e) {
-      document.getElementById('slack-dot').className = 'dot dot-err';
-      document.getElementById('slack-txt').textContent = 'Slack error: ' + (e.message || String(e));
-    }
+function cGoTo(n) {
+  document.querySelectorAll('#form-completion .screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(`c-screen-${n}`).classList.add('active');
+  cCurrent = n;
+  updateProgress(n, 7);
+  window.scrollTo(0, 0);
+  if (n === 6) cBuildSummary();
+}
 
-    // Google Sheets
-    try {
-      const c = cfg();
-      if (!c.sheetId) throw new Error('No Sheet ID set — open ⚙️ Settings to configure.');
-      const rowParams = {
-        spreadsheet: c.sheetId,
-        worksheet: c.worksheet,
-        'Arrival Date/Time': time,
-        'Property Address': addr,
-        'Inspector': name,
-        'Main Walls': data.walls.condition || '',
-        'Stairwell': data.stairwell.condition || '',
-        'Flooring': data.flooring.condition || '',
-        'Broken Tiles': data.tiles.condition || '',
-        'Kitchen Benchtops': data.benchtops.condition || '',
-        'Carpet': data.carpet.condition || '',
-        'Major Damage': AREAS.filter(a => data[a.id].condition === 'major').map(a => a.name).join(', ') || 'None',
-        'Minor Damage': AREAS.filter(a => data[a.id].condition === 'minor').map(a => a.name).join(', ') || 'None',
-        'Notes': AREAS.map(a => data[a.id].notes ? `${a.name}: ${data[a.id].notes}` : '').filter(Boolean).join(' | '),
-      };
-      await window.cowork.callMcpTool(
-        'mcp__adeab21d-d579-40ea-bdf3-16d071b0958e__execute_zapier_write_action',
-        { action: 'add_row', params: rowParams }
-      );
-      document.getElementById('sheets-dot').className = 'dot dot-ok';
-      document.getElementById('sheets-txt').textContent = 'Added to Google Sheets ✓';
-    } catch(e) {
-      document.getElementById('sheets-dot').className = 'dot dot-err';
-      document.getElementById('sheets-txt').textContent = (e.message || String(e));
-    }
+function cSetTime() {
+  document.getElementById('c-propTime').value = new Date().toLocaleString('en-AU', {
+    weekday:'short', day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit'
+  });
+}
+cSetTime();
+
+function cBegin() {
+  if (!document.getElementById('c-propAddress').value.trim()) { alert('Please enter the property address.'); return; }
+  if (!document.getElementById('c-propName').value.trim())    { alert('Please enter your name.'); return; }
+  cGoTo(1);
+}
+
+function ynBadge(v) {
+  if (!v) return '<span class="badge badge-na">Not answered</span>';
+  return v === 'yes' ? '<span class="badge badge-yes">✅ Yes</span>' : '<span class="badge badge-no">❌ No</span>';
+}
+
+function cBuildSummary() {
+  QUESTIONS.forEach(q => {
+    cData[q.id].notes = document.getElementById(`c-notes-${q.id}`)?.value || '';
+    if (q.type === 'text') cData[q.id].text = document.getElementById(`c-text-${q.id}`)?.value || '';
+  });
+  let html = `
+    <div class="summary-row"><span class="sum-label">Property</span><span class="sum-val">${document.getElementById('c-propAddress').value}</span></div>
+    <div class="summary-row"><span class="sum-label">Team Member</span><span class="sum-val">${document.getElementById('c-propName').value}</span></div>
+    <div class="summary-row"><span class="sum-label">Completion Time</span><span class="sum-val">${document.getElementById('c-propTime').value}</span></div>
+  `;
+  QUESTIONS.forEach(q => {
+    const d = cData[q.id], n = cP.count(q.id);
+    const valDisplay = q.type === 'text'
+      ? `<span style="color:#1a1a1a">${d.text || '—'}</span>`
+      : ynBadge(d.answer);
+    html += `<div class="summary-row">
+      <span class="sum-label">${q.icon} ${q.name}</span>
+      <span class="sum-val">${valDisplay}
+        ${n ? `<br><small style="color:#aaa;font-weight:400">${n} photo${n!==1?'s':''}</small>` : ''}
+        ${d.notes ? `<br><small style="color:#666;font-weight:400">${d.notes}</small>` : ''}
+      </span></div>`;
+  });
+  document.getElementById('c-summaryContent').innerHTML = html;
+}
+
+async function cSubmit() {
+  const btn = document.getElementById('c-submitBtn');
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>Submitting…';
+  QUESTIONS.forEach(q => {
+    cData[q.id].notes = document.getElementById(`c-notes-${q.id}`)?.value || '';
+    if (q.type === 'text') cData[q.id].text = document.getElementById(`c-text-${q.id}`)?.value || '';
+  });
+  const payload = {
+    formType:        'completion',
+    address:         document.getElementById('c-propAddress').value,
+    inspector:       document.getElementById('c-propName').value,
+    completionTime:  document.getElementById('c-propTime').value,
+    patchPaint:      cData.patchpaint.answer || '',
+    patchPaintNotes: cData.patchpaint.notes,
+    damage:          cData.damage.answer || '',
+    damageNotes:     cData.damage.notes,
+    secured:         cData.secured.answer || '',
+    securedNotes:    cData.secured.notes,
+    lightsOff:       cData.lights.answer || '',
+    lightsNotes:     cData.lights.notes,
+    keysLocation:    cData.keys.text,
+    keysNotes:       cData.keys.notes,
+    photoCounts:     Object.fromEntries(QUESTIONS.map(q => [q.id, cP.count(q.id)])),
+  };
+  cGoTo(7);
+  document.getElementById('c-successTime').textContent = `Completed at ${new Date().toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'})}`;
+  await postReport('c-intStatuses', cfg().completionWebhook, payload);
+}
+
+function cStartOver() {
+  QUESTIONS.forEach(q => {
+    cData[q.id] = { answer: null, notes: '', text: '' };
+    cP.photos[q.id] = []; cP.render(q.id);
+    if (q.type === 'yesno') ['yes','no'].forEach(v => { const b = document.getElementById(`c-yn-${q.id}-${v}`); if(b) b.className='yn-btn'; });
+    const ta = document.getElementById(`c-notes-${q.id}`); if(ta) ta.value='';
+    const tx = document.getElementById(`c-text-${q.id}`); if(tx) tx.value='';
+  });
+  document.getElementById('c-propAddress').value = '';
+  document.getElementById('c-propName').value = '';
+  document.getElementById('c-submitBtn').disabled = false;
+  document.getElementById('c-submitBtn').textContent = 'Submit Report ✓';
+  cSetTime(); cGoTo(0);
+}
+
+
+// ─────────────────────────────────────────────────────────────
+// SHARED: post to webhook
+// ─────────────────────────────────────────────────────────────
+async function postReport(statusElId, webhookUrl, payload) {
+  const statEl = document.getElementById(statusElId);
+  if (!webhookUrl) {
+    statEl.innerHTML = `<div class="not-configured">⚙️ No webhook configured. Tap the gear icon and paste your Apps Script URL to enable Slack + Google Sheets.</div>`;
+    return;
   }
-
-  function startOver() {
-    AREAS.forEach(a => {
-      data[a.id] = { condition: null, notes: '' };
-      photos[a.id] = [];
-      renderGrid(a.id);
-      ['good','minor','major'].forEach(c => {
-        const b = document.getElementById(`cb-${a.id}-${c}`);
-        if (b) b.className = 'cond-btn';
-      });
-      const ta = document.getElementById(`notes-${a.id}`);
-      if (ta) ta.value = '';
-    });
-    document.getElementById('propAddress').value = '';
-    document.getElementById('propName').value = '';
-    setArrivalTime();
-    document.getElementById('submitBtn').disabled = false;
-    document.getElementById('submitBtn').textContent = 'Submit Report ✓';
-    goTo(0);
+  statEl.innerHTML = `<div class="int-row" id="${statusElId}-row"><div class="dot dot-loading" id="${statusElId}-dot"></div><span id="${statusElId}-txt">Sending to Slack & Google Sheets…</span></div>`;
+  try {
+    const res = await fetch(webhookUrl, { method:'POST', headers:{'Content-Type':'text/plain'}, body: JSON.stringify(payload) });
+    if (res.ok) {
+      document.getElementById(`${statusElId}-dot`).className = 'dot dot-ok';
+      document.getElementById(`${statusElId}-txt`).textContent = 'Sent to Slack & Google Sheets ✓';
+    } else throw new Error(`HTTP ${res.status}`);
+  } catch(e) {
+    document.getElementById(`${statusElId}-dot`).className = 'dot dot-err';
+    document.getElementById(`${statusElId}-txt`).textContent = 'Error: ' + (e.message || String(e));
   }
+}
 </script>
 </body>
 </html>
