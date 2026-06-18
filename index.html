@@ -3,70 +3,48 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Foxy Home Staging – Site Reports</title>
+  <title>Foxy Home Staging - Site Reports</title>
   <style>
     :root { color-scheme: light; }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fdf8f5; color: #2d2d2d; min-height: 100vh; }
-
-    /* Header */
     .header { background: linear-gradient(135deg, #c8697a, #d4849a); padding: 14px 18px 0; color: white; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(200,105,122,0.3); }
     .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
     .gear-btn { background: rgba(255,255,255,0.2); border: none; color: white; font-size: 17px; cursor: pointer; padding: 7px; border-radius: 8px; line-height: 1; }
-
-    /* Tab bar */
     .tab-bar { display: flex; gap: 4px; }
     .tab-btn { flex: 1; padding: 10px 8px; border: none; background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.8); font-size: 13px; font-weight: 700; cursor: pointer; border-radius: 10px 10px 0 0; transition: all 0.2s; font-family: inherit; }
     .tab-btn.active { background: #fdf8f5; color: #c8697a; }
-
-    /* Progress */
     .progress-bar { height: 3px; background: #ecddd6; }
     .progress-fill { height: 100%; background: #c8697a; transition: width 0.4s ease; }
-
-    /* Forms */
     .form-view { display: none; }
     .form-view.active { display: block; }
-
-    /* Screens */
     .screen { display: none; padding: 16px; }
     .screen.active { display: block; }
-
-    /* Cards */
     .card { background: white; border-radius: 16px; padding: 18px; margin-bottom: 14px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
     .step-chip { display: inline-block; background: #fdf0f2; color: #c8697a; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.3px; }
     h2 { font-size: 20px; font-weight: 800; color: #1a1a1a; margin-bottom: 4px; line-height: 1.2; }
     h3 { font-size: 15px; font-weight: 700; color: #333; margin-bottom: 10px; }
     .card-sub { font-size: 13px; color: #999; margin-bottom: 18px; line-height: 1.5; }
     label { font-size: 13px; font-weight: 600; color: #555; display: block; margin-bottom: 6px; }
-
-    /* Inputs */
     input[type="text"], textarea { width: 100%; padding: 12px 14px; border: 1.5px solid #e8dfd8; border-radius: 10px; font-size: 15px; font-family: inherit; background: white; color: #2d2d2d; transition: border-color 0.2s; -webkit-appearance: none; }
     input:focus, textarea:focus { outline: none; border-color: #c8697a; box-shadow: 0 0 0 3px rgba(200,105,122,0.12); }
     textarea { resize: none; height: 80px; }
     .field-group { margin-bottom: 14px; }
-
-    /* Condition buttons (arrival) */
+    .q-header { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 20px; }
+    .q-icon-wrap { width: 54px; height: 54px; border-radius: 14px; background: #fdf0f2; display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0; }
+    .q-title h2 { font-size: 18px; }
+    .q-title p { font-size: 12px; color: #aaa; line-height: 1.5; margin-top: 3px; }
     .condition-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 18px; }
-    .cond-btn { padding: 14px 6px 12px; border: 2px solid #e8dfd8; border-radius: 13px; background: white; cursor: pointer; text-align: center; font-size: 11px; font-weight: 700; transition: all 0.15s; line-height: 1.3; color: #888; -webkit-tap-highlight-color: transparent; }
+    .cond-btn { padding: 14px 6px 12px; border: 2px solid #e8dfd8; border-radius: 13px; background: white; cursor: pointer; text-align: center; font-size: 11px; font-weight: 700; transition: all 0.15s; line-height: 1.3; color: #888; }
     .cond-btn .ci { font-size: 22px; display: block; margin-bottom: 5px; }
     .cond-btn.active-good  { border-color: #4caf50; background: #f1faf2; color: #2e7d32; }
     .cond-btn.active-minor { border-color: #ff9800; background: #fff8f0; color: #c85e00; }
     .cond-btn.active-major { border-color: #ef5350; background: #fff2f2; color: #c62828; }
-
-    /* Yes/No buttons (completion) */
     .yn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px; }
-    .yn-btn { padding: 18px 10px 14px; border: 2px solid #e8dfd8; border-radius: 13px; background: white; cursor: pointer; text-align: center; font-size: 13px; font-weight: 700; transition: all 0.15s; line-height: 1.3; color: #888; -webkit-tap-highlight-color: transparent; }
+    .yn-btn { padding: 18px 10px 14px; border: 2px solid #e8dfd8; border-radius: 13px; background: white; cursor: pointer; text-align: center; font-size: 13px; font-weight: 700; transition: all 0.15s; line-height: 1.3; color: #888; }
     .yn-btn .yi { font-size: 28px; display: block; margin-bottom: 6px; }
     .yn-btn.active-yes { border-color: #4caf50; background: #f1faf2; color: #2e7d32; }
     .yn-btn.active-no  { border-color: #ef5350; background: #fff2f2; color: #c62828; }
-
-    /* Question header */
-    .q-header { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 20px; }
-    .q-icon-wrap { width: 54px; height: 54px; border-radius: 14px; background: #fdf0f2; display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0; }
-    .q-title h2 { font-size: 18px; }
-    .q-title p  { font-size: 12px; color: #aaa; line-height: 1.5; margin-top: 3px; }
-
-    /* Photos */
     .photo-label-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
     .photo-count-badge { font-size: 11px; color: #c8697a; font-weight: 700; }
     .upload-zone { border: 2px dashed #d8cfc8; border-radius: 12px; padding: 18px 12px; text-align: center; cursor: pointer; background: #fafaf8; }
@@ -78,21 +56,17 @@
     .photo-thumb { position: relative; aspect-ratio: 1; }
     .photo-thumb img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; display: block; }
     .thumb-remove { position: absolute; top: 3px; right: 3px; background: rgba(0,0,0,0.65); color: white; border: none; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; font-weight: 700; }
-
-    /* Buttons */
     .nav-row { display: flex; gap: 10px; margin-top: 16px; }
     .nav-row .btn { flex: 1; }
-    .btn { padding: 15px 16px; border: none; border-radius: 13px; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.15s; font-family: inherit; width: 100%; display: block; text-align: center; -webkit-tap-highlight-color: transparent; }
+    .btn { padding: 15px 16px; border: none; border-radius: 13px; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.15s; font-family: inherit; width: 100%; display: block; text-align: center; }
     .btn-primary { background: linear-gradient(135deg, #c8697a, #d4849a); color: white; box-shadow: 0 3px 10px rgba(200,105,122,0.3); }
     .btn-primary:disabled { opacity: 0.55; cursor: default; box-shadow: none; }
-    .btn-back    { background: #f0ebe6; color: #777; border: none; }
+    .btn-back { background: #f0ebe6; color: #777; border: none; }
     .btn-outline { background: white; color: #c8697a; border: 2px solid #c8697a; }
-
-    /* Summary */
     .summary-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 11px 0; border-bottom: 1px solid #f5efe8; gap: 12px; }
     .summary-row:last-child { border-bottom: none; }
     .sum-label { font-size: 13px; color: #888; flex-shrink: 0; max-width: 45%; }
-    .sum-val   { font-size: 13px; font-weight: 600; color: #1a1a1a; text-align: right; }
+    .sum-val { font-size: 13px; font-weight: 600; color: #1a1a1a; text-align: right; }
     .badge { display: inline-block; padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 700; }
     .badge-good  { background: #e8f5e9; color: #2e7d32; }
     .badge-minor { background: #fff3e0; color: #c85e00; }
@@ -100,8 +74,6 @@
     .badge-yes   { background: #e8f5e9; color: #2e7d32; }
     .badge-no    { background: #ffebee; color: #c62828; }
     .badge-na    { background: #f3f3f3; color: #bbb; }
-
-    /* Success */
     .success-wrap { text-align: center; padding: 24px 0 16px; }
     .success-emoji { font-size: 60px; margin-bottom: 12px; }
     .success-title { font-size: 22px; font-weight: 800; color: #1a1a1a; margin-bottom: 6px; }
@@ -112,8 +84,6 @@
     .dot-ok  { background: #4caf50; }
     .dot-err { background: #f44336; }
     @keyframes blink { 0%,100%{opacity:1}50%{opacity:0.25} }
-
-    /* Settings drawer */
     .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 300; align-items: flex-end; }
     .overlay.open { display: flex; }
     .drawer { background: white; width: 100%; border-radius: 22px 22px 0 0; padding: 22px 18px 40px; max-height: 85vh; overflow-y: auto; }
@@ -123,11 +93,9 @@
     .settings-section { font-size: 11px; font-weight: 800; color: #c8697a; text-transform: uppercase; letter-spacing: 0.5px; margin: 20px 0 10px; }
     .hint { font-size: 11px; color: #bbb; margin-top: 4px; line-height: 1.5; }
     .not-configured { background: #fff8e1; border: 1px solid #ffe082; border-radius: 10px; padding: 12px 14px; font-size: 13px; color: #7a5f00; margin-bottom: 8px; }
-
-    /* Spinner */
+    .compressing-msg { font-size: 12px; color: #c8697a; margin-top: 6px; text-align: center; }
     .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.4); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 6px; }
     @keyframes spin { to { transform: rotate(360deg); } }
-
     @media print {
       .header, .nav-row, .btn, .overlay, .gear-btn, .progress-bar, .thumb-remove, .upload-zone, .tab-bar { display: none !important; }
       .form-view, .screen { display: block !important; padding: 0 !important; }
@@ -138,53 +106,48 @@
 </head>
 <body>
 
-<!-- Header + tabs -->
 <div class="header">
   <div class="header-top">
     <div>
-      <div style="font-size:15px;font-weight:800;color:white">🏡 Foxy Home Staging</div>
+      <div style="font-size:15px;font-weight:800;color:white">Foxy Home Staging</div>
       <div style="font-size:11px;color:rgba(255,255,255,0.85)" id="headerSub">Site Reports</div>
     </div>
-    <button class="gear-btn" onclick="openSettings()">⚙️</button>
+    <button class="gear-btn" onclick="openSettings()">&#9881;</button>
   </div>
   <div class="tab-bar">
-    <button class="tab-btn active" id="tab-arrival"    onclick="switchForm('arrival')">🚚 Arrival Report</button>
-    <button class="tab-btn"        id="tab-completion" onclick="switchForm('completion')">✅ Completion Report</button>
+    <button class="tab-btn active" id="tab-arrival"    onclick="switchForm('arrival')">Arrival Report</button>
+    <button class="tab-btn"        id="tab-completion" onclick="switchForm('completion')">Completion Report</button>
   </div>
 </div>
 <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
 
-<!-- Settings Drawer -->
+<!-- Settings -->
 <div class="overlay" id="settingsOverlay" onclick="overlayClickHandler(event)">
   <div class="drawer">
     <div class="drawer-header">
-      <h3>⚙️ Settings</h3>
-      <button class="close-btn" onclick="closeSettings()">×</button>
+      <h3>Settings</h3>
+      <button class="close-btn" onclick="closeSettings()">x</button>
     </div>
-    <div class="settings-section">🚚 Arrival Report</div>
+    <div class="settings-section">Arrival Report</div>
     <div class="field-group">
       <label>Webhook URL</label>
       <input type="text" id="cfgArrivalWebhook" placeholder="Apps Script web app URL">
-      <div class="hint">Handles Slack posting to #pre-existing-damage and logs to the Inspections sheet tab.</div>
+      <div class="hint">Handles Slack + Google Sheets + Drive photo upload for arrival reports.</div>
     </div>
-    <div class="settings-section">✅ Completion Report</div>
+    <div class="settings-section">Completion Report</div>
     <div class="field-group">
       <label>Webhook URL</label>
       <input type="text" id="cfgCompletionWebhook" placeholder="Apps Script web app URL (can be same)">
-      <div class="hint">Handles Slack posting to your completion channel and logs to the Completions sheet tab.</div>
+      <div class="hint">Handles Slack + Google Sheets + Drive photo upload for completion reports.</div>
     </div>
     <button class="btn btn-primary" style="margin-top:20px" onclick="saveSettings()">Save Settings</button>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════════ -->
-<!-- ARRIVAL FORM                                               -->
-<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- ARRIVAL FORM -->
 <div class="form-view active" id="form-arrival">
-
-  <!-- A-0: Property details -->
   <div class="screen active" id="a-screen-0">
-    <div style="font-size:48px;text-align:center;margin:8px 0 16px">🦊</div>
+    <div style="font-size:48px;text-align:center;margin:8px 0 16px">&#129418;</div>
     <div style="text-align:center;font-size:22px;font-weight:800;color:#c8697a;margin-bottom:4px">Pre-Existing Damage</div>
     <div style="text-align:center;font-size:13px;color:#aaa;margin-bottom:24px">Complete on arrival at the property</div>
     <div class="card">
@@ -204,51 +167,39 @@
         <input type="text" id="a-propTime" readonly style="background:#fafaf8;color:#888">
       </div>
     </div>
-    <button class="btn btn-primary" onclick="aBegin()">Begin Inspection →</button>
+    <button class="btn btn-primary" onclick="aBegin()">Begin Inspection</button>
   </div>
-
-  <!-- A-1 to A-6: Area screens (built by JS) -->
-
-  <!-- A-7: Summary -->
   <div class="screen" id="a-screen-7">
     <div class="card">
       <div class="step-chip">Final Step</div>
-      <h2>Review & Submit</h2>
+      <h2>Review and Submit</h2>
       <p class="card-sub">Check everything looks right then submit.</p>
       <div id="a-summaryContent"></div>
     </div>
-    <button class="btn btn-primary" id="a-submitBtn" onclick="aSubmit()">Submit Report ✓</button>
-    <div style="margin-top:8px"><button class="btn btn-back" onclick="aGoTo(6)">← Back</button></div>
+    <button class="btn btn-primary" id="a-submitBtn" onclick="aSubmit()">Submit Report</button>
+    <div style="margin-top:8px"><button class="btn btn-back" onclick="aGoTo(6)">Back</button></div>
   </div>
-
-  <!-- A-8: Success -->
   <div class="screen" id="a-screen-8">
     <div class="card">
       <div class="success-wrap">
-        <div class="success-emoji">🎉</div>
+        <div class="success-emoji">&#127881;</div>
         <div class="success-title">Arrival Report Sent!</div>
         <div class="success-time" id="a-successTime"></div>
       </div>
       <h3>Integrations</h3>
       <div id="a-intStatuses"></div>
     </div>
-    <button class="btn btn-outline" style="margin-top:8px" onclick="window.print()">🖨️ Save as PDF</button>
-    <div style="margin-top:8px"><button class="btn btn-back" onclick="aStartOver()">+ New Arrival Report</button></div>
+    <button class="btn btn-outline" style="margin-top:8px" onclick="window.print()">Save as PDF</button>
+    <div style="margin-top:8px"><button class="btn btn-back" onclick="aStartOver()">New Arrival Report</button></div>
   </div>
+</div>
 
-</div><!-- /form-arrival -->
-
-
-<!-- ═══════════════════════════════════════════════════════════ -->
-<!-- COMPLETION FORM                                            -->
-<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- COMPLETION FORM -->
 <div class="form-view" id="form-completion">
-
-  <!-- C-0: Property details -->
   <div class="screen active" id="c-screen-0">
-    <div style="font-size:48px;text-align:center;margin:8px 0 16px">✅</div>
+    <div style="font-size:48px;text-align:center;margin:8px 0 16px">&#9989;</div>
     <div style="text-align:center;font-size:22px;font-weight:800;color:#c8697a;margin-bottom:4px">Install Complete</div>
-    <div style="text-align:center;font-size:13px;color:#aaa;margin-bottom:24px">Final walkthrough — complete before leaving</div>
+    <div style="text-align:center;font-size:13px;color:#aaa;margin-bottom:24px">Final walkthrough - complete before leaving</div>
     <div class="card">
       <div class="step-chip">Step 1 of 7</div>
       <h2>Property Details</h2>
@@ -266,53 +217,43 @@
         <input type="text" id="c-propTime" readonly style="background:#fafaf8;color:#888">
       </div>
     </div>
-    <button class="btn btn-primary" onclick="cBegin()">Begin Walkthrough →</button>
+    <button class="btn btn-primary" onclick="cBegin()">Begin Walkthrough</button>
   </div>
-
-  <!-- C-1 to C-5: Question screens (built by JS) -->
-
-  <!-- C-6: Summary -->
   <div class="screen" id="c-screen-6">
     <div class="card">
       <div class="step-chip">Final Step</div>
-      <h2>Review & Submit</h2>
+      <h2>Review and Submit</h2>
       <p class="card-sub">Check everything looks right then submit.</p>
       <div id="c-summaryContent"></div>
     </div>
-    <button class="btn btn-primary" id="c-submitBtn" onclick="cSubmit()">Submit Report ✓</button>
-    <div style="margin-top:8px"><button class="btn btn-back" onclick="cGoTo(5)">← Back</button></div>
+    <button class="btn btn-primary" id="c-submitBtn" onclick="cSubmit()">Submit Report</button>
+    <div style="margin-top:8px"><button class="btn btn-back" onclick="cGoTo(5)">Back</button></div>
   </div>
-
-  <!-- C-7: Success -->
   <div class="screen" id="c-screen-7">
     <div class="card">
       <div class="success-wrap">
-        <div class="success-emoji">🏆</div>
+        <div class="success-emoji">&#127942;</div>
         <div class="success-title">Completion Report Sent!</div>
         <div class="success-time" id="c-successTime"></div>
       </div>
       <h3>Integrations</h3>
       <div id="c-intStatuses"></div>
     </div>
-    <button class="btn btn-outline" style="margin-top:8px" onclick="window.print()">🖨️ Save as PDF</button>
-    <div style="margin-top:8px"><button class="btn btn-back" onclick="cStartOver()">+ New Completion Report</button></div>
+    <button class="btn btn-outline" style="margin-top:8px" onclick="window.print()">Save as PDF</button>
+    <div style="margin-top:8px"><button class="btn btn-back" onclick="cStartOver()">New Completion Report</button></div>
   </div>
-
-</div><!-- /form-completion -->
-
+</div>
 
 <script>
-// ─────────────────────────────────────────────────────────────
 // SETTINGS
-// ─────────────────────────────────────────────────────────────
 function cfg() {
   return {
     arrivalWebhook:    localStorage.getItem('cfg_arrival_webhook')    || '',
-    completionWebhook: localStorage.getItem('cfg_completion_webhook') || '',
+    completionWebhook: localStorage.getItem('cfg_completion_webhook') || ''
   };
 }
 function openSettings() {
-  const c = cfg();
+  var c = cfg();
   document.getElementById('cfgArrivalWebhook').value    = c.arrivalWebhook;
   document.getElementById('cfgCompletionWebhook').value = c.completionWebhook;
   document.getElementById('settingsOverlay').classList.add('open');
@@ -325,136 +266,178 @@ function saveSettings() {
   closeSettings();
 }
 
-// ─────────────────────────────────────────────────────────────
 // TAB SWITCHING
-// ─────────────────────────────────────────────────────────────
-let activeForm = 'arrival';
 function switchForm(form) {
-  activeForm = form;
-  document.querySelectorAll('.form-view').forEach(v => v.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById(`form-${form}`).classList.add('active');
-  document.getElementById(`tab-${form}`).classList.add('active');
+  document.querySelectorAll('.form-view').forEach(function(v) { v.classList.remove('active'); });
+  document.querySelectorAll('.tab-btn').forEach(function(b)   { b.classList.remove('active'); });
+  document.getElementById('form-' + form).classList.add('active');
+  document.getElementById('tab-' + form).classList.add('active');
   document.getElementById('headerSub').textContent = form === 'arrival' ? 'Arrival Report' : 'Completion Report';
   document.getElementById('progressFill').style.width = '0%';
 }
 
-// ─────────────────────────────────────────────────────────────
-// SHARED: photos + progress
-// ─────────────────────────────────────────────────────────────
-function makePhotoHandlers(prefix) {
-  const photos = {};
-  function add(id, input) {
-    if (!photos[id]) photos[id] = [];
-    Array.from(input.files).forEach(file => {
-      const r = new FileReader();
-      r.onload = e => { photos[id].push(e.target.result); render(id); };
-      r.readAsDataURL(file);
-    });
-    input.value = '';
-  }
-  function remove(id, idx) { photos[id].splice(idx, 1); render(id); }
-  function render(id) {
-    const n = (photos[id] || []).length;
-    const cb = document.getElementById(`${prefix}photoCount-${id}`);
-    const pg = document.getElementById(`${prefix}pg-${id}`);
-    if (cb) cb.textContent = n ? `${n} photo${n!==1?'s':''}` : '';
-    if (pg) pg.innerHTML = (photos[id] || []).map((src, i) => `
-      <div class="photo-thumb">
-        <img src="${src}" alt="">
-        <button class="thumb-remove" onclick="${prefix}removePhoto('${id}',${i})">×</button>
-      </div>`).join('');
-  }
-  function count(id) { return (photos[id] || []).length; }
-  function init(id) { if (!photos[id]) photos[id] = []; }
-  return { add, remove, render, count, init, photos };
+// IMAGE COMPRESSION
+// Resizes photos to max 1200px wide and compresses to JPEG 80%
+// This keeps file sizes small enough to send reliably
+function compressImage(dataURL) {
+  return new Promise(function(resolve) {
+    var img = new Image();
+    img.onload = function() {
+      var maxW = 1200;
+      var w = img.width, h = img.height;
+      if (w > maxW) { h = Math.round(h * maxW / w); w = maxW; }
+      var canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      resolve(canvas.toDataURL('image/jpeg', 0.80));
+    };
+    img.src = dataURL;
+  });
+}
+
+// PHOTO HANDLERS
+function makePhotoStore(prefix) {
+  var store = {};
+  return {
+    data: store,
+    init: function(id) { if (!store[id]) store[id] = []; },
+    add: function(id, input) {
+      var files = Array.from(input.files);
+      input.value = '';
+      var countEl = document.getElementById(prefix + 'photoCount-' + id);
+      if (countEl) countEl.textContent = 'Compressing...';
+      var promises = files.map(function(file) {
+        return new Promise(function(resolve) {
+          var reader = new FileReader();
+          reader.onload = function(e) {
+            compressImage(e.target.result).then(function(compressed) {
+              store[id].push(compressed);
+              resolve();
+            });
+          };
+          reader.readAsDataURL(file);
+        });
+      });
+      Promise.all(promises).then(function() { renderGrid(prefix, id, store); });
+    },
+    remove: function(id, idx) { store[id].splice(idx, 1); renderGrid(prefix, id, store); },
+    count: function(id) { return (store[id] || []).length; },
+    all: function(id) { return store[id] || []; }
+  };
+}
+
+function renderGrid(prefix, id, store) {
+  var n  = (store[id] || []).length;
+  var cb = document.getElementById(prefix + 'photoCount-' + id);
+  var pg = document.getElementById(prefix + 'pg-' + id);
+  if (cb) cb.textContent = n ? n + ' photo' + (n !== 1 ? 's' : '') : '';
+  if (pg) pg.innerHTML = (store[id] || []).map(function(src, i) {
+    var fn = prefix === 'a-' ? 'aRemovePhoto' : 'cRemovePhoto';
+    return '<div class="photo-thumb"><img src="' + src + '" alt=""><button class="thumb-remove" onclick="' + fn + '(\'' + id + '\',' + i + ')">x</button></div>';
+  }).join('');
 }
 
 function updateProgress(current, total) {
   document.getElementById('progressFill').style.width = ((current / total) * 100) + '%';
 }
 
-function sendToWebhook(url, payload) {
-  return fetch(url, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(payload) });
+// POST TO WEBHOOK
+async function postReport(statusElId, webhookUrl, payload) {
+  var statEl = document.getElementById(statusElId);
+  if (!webhookUrl) {
+    statEl.innerHTML = '<div class="not-configured">No webhook configured. Tap the settings gear and paste your Apps Script URL.</div>';
+    return;
+  }
+  statEl.innerHTML = '<div class="int-row" id="' + statusElId + '-row"><div class="dot dot-loading" id="' + statusElId + '-dot"></div><span id="' + statusElId + '-txt">Uploading photos and sending report...</span></div>';
+  try {
+    var res = await fetch(webhookUrl, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(payload) });
+    var json = await res.json();
+    if (res.ok && json.status === 'ok') {
+      document.getElementById(statusElId + '-dot').className = 'dot dot-ok';
+      var link = json.driveUrl ? ' - <a href="' + json.driveUrl + '" target="_blank">View Photos in Drive</a>' : '';
+      document.getElementById(statusElId + '-txt').innerHTML = 'Sent to Slack and Google Sheets' + link;
+    } else {
+      throw new Error(json.message || 'HTTP ' + res.status);
+    }
+  } catch(e) {
+    document.getElementById(statusElId + '-dot').className = 'dot dot-err';
+    document.getElementById(statusElId + '-txt').textContent = 'Error: ' + (e.message || String(e));
+  }
 }
 
-// ─────────────────────────────────────────────────────────────
+
+// =============================================
 // ARRIVAL FORM
-// ─────────────────────────────────────────────────────────────
-const AREAS = [
-  { id: 'walls',     name: 'Main Walls',       icon: '🧱', hint: 'Check all walls for marks, scuffs, holes or stains.' },
-  { id: 'stairwell', name: 'Stairwell',         icon: '🪜', hint: 'Inspect treads, risers, handrail and surrounding walls.' },
-  { id: 'flooring',  name: 'Flooring',          icon: '🏠', hint: 'Check all hard flooring for scratches or chips.' },
-  { id: 'tiles',     name: 'Broken Tiles',      icon: '🔲', hint: 'Look for cracked or missing tiles throughout.' },
-  { id: 'benchtops', name: 'Kitchen Benchtops', icon: '🍳', hint: 'Inspect for scratches, burns, chips or stains.' },
-  { id: 'carpet',    name: 'Carpet',            icon: '🛋️', hint: 'Check for stains, tears or worn patches.' },
+// =============================================
+var AREAS = [
+  { id: 'walls',     name: 'Main Walls',        icon: '&#129523;', hint: 'Check all walls for marks, scuffs, holes or stains.' },
+  { id: 'stairwell', name: 'Stairwell',          icon: '&#129692;', hint: 'Inspect treads, risers, handrail and surrounding walls.' },
+  { id: 'flooring',  name: 'Flooring',           icon: '&#127968;', hint: 'Check all hard flooring for scratches or chips.' },
+  { id: 'tiles',     name: 'Broken Tiles',       icon: '&#9638;',   hint: 'Look for cracked or missing tiles throughout.' },
+  { id: 'benchtops', name: 'Kitchen Benchtops',  icon: '&#127859;', hint: 'Inspect for scratches, burns, chips or stains.' },
+  { id: 'carpet',    name: 'Carpet',             icon: '&#128715;', hint: 'Check for stains, tears or worn patches.' }
 ];
 
-let aData   = {};
-const aP    = makePhotoHandlers('a-');
-let aCurrent = 0;
+var aData  = {};
+var aStore = makePhotoStore('a-');
+var aCur   = 0;
 
-window.aRemovePhoto = (id, idx) => { aP.remove(id, idx); };
+window.aRemovePhoto = function(id, idx) { aStore.remove(id, idx); };
 
-function aBuildScreens() {
-  const ref = document.getElementById('a-screen-7');
-  AREAS.forEach((area, i) => {
-    aP.init(area.id);
+(function buildArrivalScreens() {
+  var ref = document.getElementById('a-screen-7');
+  AREAS.forEach(function(area, i) {
+    aStore.init(area.id);
     aData[area.id] = { condition: null, notes: '' };
-    const el = document.createElement('div');
+    var el = document.createElement('div');
     el.className = 'screen';
-    el.id = `a-screen-${i + 1}`;
-    el.innerHTML = `
-      <div class="card">
-        <div class="step-chip">Step ${i + 2} of 8</div>
-        <div class="q-header">
-          <div class="q-icon-wrap">${area.icon}</div>
-          <div class="q-title"><h2>${area.name}</h2><p>${area.hint}</p></div>
-        </div>
-        <label style="margin-bottom:8px">Condition</label>
-        <div class="condition-row">
-          <button class="cond-btn" id="a-cb-${area.id}-good"  onclick="aSetCond('${area.id}','good')"><span class="ci">✅</span>Good</button>
-          <button class="cond-btn" id="a-cb-${area.id}-minor" onclick="aSetCond('${area.id}','minor')"><span class="ci">⚠️</span>Minor Damage</button>
-          <button class="cond-btn" id="a-cb-${area.id}-major" onclick="aSetCond('${area.id}','major')"><span class="ci">🚨</span>Major Damage</button>
-        </div>
-        <label>Notes</label>
-        <textarea id="a-notes-${area.id}" placeholder="Describe damage location and extent..."></textarea>
-        <div style="margin-top:16px">
-          <div class="photo-label-row">
-            <label style="margin:0">Photos</label>
-            <span class="photo-count-badge" id="a-photoCount-${area.id}"></span>
-          </div>
-          <div class="upload-zone" onclick="document.getElementById('a-fi-${area.id}').click()">
-            <input type="file" id="a-fi-${area.id}" multiple accept="image/*" capture="environment" onchange="aP.add('${area.id}',this)">
-            <div class="cam-icon">📷</div>
-            <p>Tap to take or upload photos</p>
-            <span class="upload-btn-inline">Add Photos</span>
-          </div>
-          <div class="photo-grid" id="a-pg-${area.id}"></div>
-        </div>
-      </div>
-      <div class="nav-row">
-        <button class="btn btn-back" onclick="aGoTo(${i})">← Back</button>
-        <button class="btn btn-primary" onclick="aGoTo(${i + 2})">Next →</button>
-      </div>`;
+    el.id = 'a-screen-' + (i + 1);
+    el.innerHTML = [
+      '<div class="card">',
+      '  <div class="step-chip">Step ' + (i + 2) + ' of 8</div>',
+      '  <div class="q-header">',
+      '    <div class="q-icon-wrap">' + area.icon + '</div>',
+      '    <div class="q-title"><h2>' + area.name + '</h2><p>' + area.hint + '</p></div>',
+      '  </div>',
+      '  <label style="margin-bottom:8px">Condition</label>',
+      '  <div class="condition-row">',
+      '    <button class="cond-btn" id="a-cb-' + area.id + '-good"  onclick="aSetCond(\'' + area.id + '\',\'good\')"><span class="ci">&#9989;</span>Good</button>',
+      '    <button class="cond-btn" id="a-cb-' + area.id + '-minor" onclick="aSetCond(\'' + area.id + '\',\'minor\')"><span class="ci">&#9888;&#65039;</span>Minor Damage</button>',
+      '    <button class="cond-btn" id="a-cb-' + area.id + '-major" onclick="aSetCond(\'' + area.id + '\',\'major\')"><span class="ci">&#128680;</span>Major Damage</button>',
+      '  </div>',
+      '  <label>Notes</label>',
+      '  <textarea id="a-notes-' + area.id + '" placeholder="Describe damage..."></textarea>',
+      '  <div style="margin-top:16px">',
+      '    <div class="photo-label-row"><label style="margin:0">Photos</label><span class="photo-count-badge" id="a-photoCount-' + area.id + '"></span></div>',
+      '    <div class="upload-zone" onclick="document.getElementById(\'a-fi-' + area.id + '\').click()">',
+      '      <input type="file" id="a-fi-' + area.id + '" multiple accept="image/*" onchange="aStore.add(\'' + area.id + '\',this)">',
+      '      <div class="cam-icon">&#128247;</div>',
+      '      <p>Tap to take or upload photos</p>',
+      '      <span class="upload-btn-inline">Add Photos</span>',
+      '    </div>',
+      '    <div class="photo-grid" id="a-pg-' + area.id + '"></div>',
+      '  </div>',
+      '</div>',
+      '<div class="nav-row">',
+      '  <button class="btn btn-back" onclick="aGoTo(' + i + ')">Back</button>',
+      '  <button class="btn btn-primary" onclick="aGoTo(' + (i + 2) + ')">Next</button>',
+      '</div>'
+    ].join('');
     ref.parentNode.insertBefore(el, ref);
   });
-}
-aBuildScreens();
+})();
 
 function aSetCond(id, val) {
   aData[id].condition = val;
-  ['good','minor','major'].forEach(c => {
-    document.getElementById(`a-cb-${id}-${c}`).className = 'cond-btn' + (c === val ? ` active-${c}` : '');
+  ['good','minor','major'].forEach(function(c) {
+    document.getElementById('a-cb-' + id + '-' + c).className = 'cond-btn' + (c === val ? ' active-' + c : '');
   });
 }
 
 function aGoTo(n) {
-  document.querySelectorAll('#form-arrival .screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(`a-screen-${n}`).classList.add('active');
-  aCurrent = n;
-  updateProgress(n, 8);
-  window.scrollTo(0, 0);
+  document.querySelectorAll('#form-arrival .screen').forEach(function(s) { s.classList.remove('active'); });
+  document.getElementById('a-screen-' + n).classList.add('active');
+  aCur = n; updateProgress(n, 8); window.scrollTo(0, 0);
   if (n === 7) aBuildSummary();
 }
 
@@ -473,148 +456,105 @@ function aBegin() {
 
 function condBadge(c) {
   if (!c) return '<span class="badge badge-na">Not checked</span>';
-  return { good:'<span class="badge badge-good">✅ Good</span>', minor:'<span class="badge badge-minor">⚠️ Minor</span>', major:'<span class="badge badge-major">🚨 Major</span>' }[c];
+  return { good:'<span class="badge badge-good">Good</span>', minor:'<span class="badge badge-minor">Minor</span>', major:'<span class="badge badge-major">Major</span>' }[c];
 }
 
 function aBuildSummary() {
-  AREAS.forEach(a => { aData[a.id].notes = document.getElementById(`a-notes-${a.id}`)?.value || ''; });
-  let html = `
-    <div class="summary-row"><span class="sum-label">Property</span><span class="sum-val">${document.getElementById('a-propAddress').value}</span></div>
-    <div class="summary-row"><span class="sum-label">Inspector</span><span class="sum-val">${document.getElementById('a-propName').value}</span></div>
-    <div class="summary-row"><span class="sum-label">Arrival Time</span><span class="sum-val">${document.getElementById('a-propTime').value}</span></div>
-  `;
-  AREAS.forEach(area => {
-    const d = aData[area.id], n = aP.count(area.id);
-    html += `<div class="summary-row">
-      <span class="sum-label">${area.icon} ${area.name}</span>
-      <span class="sum-val">${condBadge(d.condition)}
-        ${n ? `<br><small style="color:#aaa;font-weight:400">${n} photo${n!==1?'s':''}</small>` : ''}
-        ${d.notes ? `<br><small style="color:#666;font-weight:400">${d.notes}</small>` : ''}
-      </span></div>`;
+  AREAS.forEach(function(a) { aData[a.id].notes = (document.getElementById('a-notes-' + a.id) || {}).value || ''; });
+  var html = '<div class="summary-row"><span class="sum-label">Property</span><span class="sum-val">' + document.getElementById('a-propAddress').value + '</span></div>' +
+    '<div class="summary-row"><span class="sum-label">Inspector</span><span class="sum-val">' + document.getElementById('a-propName').value + '</span></div>' +
+    '<div class="summary-row"><span class="sum-label">Arrival Time</span><span class="sum-val">' + document.getElementById('a-propTime').value + '</span></div>';
+  AREAS.forEach(function(area) {
+    var d = aData[area.id], n = aStore.count(area.id);
+    html += '<div class="summary-row"><span class="sum-label">' + area.name + '</span><span class="sum-val">' + condBadge(d.condition) +
+      (n ? '<br><small style="color:#aaa;font-weight:400">' + n + ' photo' + (n!==1?'s':'') + '</small>' : '') +
+      (d.notes ? '<br><small style="color:#666;font-weight:400">' + d.notes + '</small>' : '') + '</span></div>';
   });
   document.getElementById('a-summaryContent').innerHTML = html;
 }
 
 async function aSubmit() {
-  const btn = document.getElementById('a-submitBtn');
-  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>Submitting…';
-  AREAS.forEach(a => { aData[a.id].notes = document.getElementById(`a-notes-${a.id}`)?.value || ''; });
-  const payload = {
+  var btn = document.getElementById('a-submitBtn');
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>Submitting...';
+  AREAS.forEach(function(a) { aData[a.id].notes = (document.getElementById('a-notes-' + a.id) || {}).value || ''; });
+  var payload = {
     formType:    'arrival',
     address:     document.getElementById('a-propAddress').value,
     inspector:   document.getElementById('a-propName').value,
     arrivalTime: document.getElementById('a-propTime').value,
-    areas:       Object.fromEntries(AREAS.map(a => [a.id, aData[a.id].condition || ''])),
-    photoCounts: Object.fromEntries(AREAS.map(a => [a.id, aP.count(a.id)])),
-    majorDamage: AREAS.filter(a => aData[a.id].condition === 'major').map(a => a.name).join(', ') || 'None',
-    minorDamage: AREAS.filter(a => aData[a.id].condition === 'minor').map(a => a.name).join(', ') || 'None',
-    notes:       AREAS.map(a => aData[a.id].notes ? `${a.name}: ${aData[a.id].notes}` : '').filter(Boolean).join(' | '),
+    areas:       {},
+    photos:      {},
+    majorDamage: AREAS.filter(function(a) { return aData[a.id].condition === 'major'; }).map(function(a) { return a.name; }).join(', ') || 'None',
+    minorDamage: AREAS.filter(function(a) { return aData[a.id].condition === 'minor'; }).map(function(a) { return a.name; }).join(', ') || 'None',
+    notes:       AREAS.map(function(a) { return aData[a.id].notes ? a.name + ': ' + aData[a.id].notes : ''; }).filter(Boolean).join(' | ')
   };
+  AREAS.forEach(function(a) {
+    payload.areas[a.id]  = aData[a.id].condition || '';
+    payload.photos[a.id] = aStore.all(a.id);
+  });
   aGoTo(8);
-  document.getElementById('a-successTime').textContent = `Completed at ${new Date().toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'})}`;
+  document.getElementById('a-successTime').textContent = 'Completed at ' + new Date().toLocaleTimeString('en-AU', {hour:'2-digit',minute:'2-digit'});
   await postReport('a-intStatuses', cfg().arrivalWebhook, payload);
 }
 
 function aStartOver() {
-  AREAS.forEach(a => {
+  AREAS.forEach(function(a) {
     aData[a.id] = { condition: null, notes: '' };
-    aP.photos[a.id] = []; aP.render(a.id);
-    ['good','minor','major'].forEach(c => { const b = document.getElementById(`a-cb-${a.id}-${c}`); if(b) b.className='cond-btn'; });
-    const ta = document.getElementById(`a-notes-${a.id}`); if(ta) ta.value='';
+    aStore.data[a.id] = []; renderGrid('a-', a.id, aStore.data);
+    ['good','minor','major'].forEach(function(c) { var b = document.getElementById('a-cb-' + a.id + '-' + c); if(b) b.className='cond-btn'; });
+    var ta = document.getElementById('a-notes-' + a.id); if(ta) ta.value='';
   });
   document.getElementById('a-propAddress').value = '';
   document.getElementById('a-propName').value = '';
   document.getElementById('a-submitBtn').disabled = false;
-  document.getElementById('a-submitBtn').textContent = 'Submit Report ✓';
+  document.getElementById('a-submitBtn').textContent = 'Submit Report';
   aSetTime(); aGoTo(0);
 }
 
 
-// ─────────────────────────────────────────────────────────────
+// =============================================
 // COMPLETION FORM
-// ─────────────────────────────────────────────────────────────
-const QUESTIONS = [
-  { id: 'patchpaint', name: 'Patch & Paint',       icon: '🖌️', question: 'Were there any patch and paints required?',         hint: 'Select Yes and note the location if any walls needed patching.',       type: 'yesno' },
-  { id: 'damage',     name: 'Property Damage',      icon: '⚠️', question: 'Did we damage the property at all?',                hint: 'Be honest — note the location and nature of any damage caused.',       type: 'yesno' },
-  { id: 'secured',    name: 'House Secured',        icon: '🔒', question: 'Have you secured the house?',                       hint: 'Confirm both the back door and front door are locked.',                type: 'yesno' },
-  { id: 'lights',     name: 'Lights & Air Con',     icon: '💡', question: 'Have you turned off the lights and air conditioning?', hint: 'Check all rooms including garage and outdoor lights.',               type: 'yesno' },
-  { id: 'keys',       name: 'Keys Location',        icon: '🔑', question: 'Where have you left the keys?',                    hint: 'Describe exactly where the keys are — lockbox, letterbox, with agent etc.', type: 'text' },
+// =============================================
+var QUESTIONS = [
+  { id: 'patchpaint', name: 'Patch and Paint',    icon: '&#127820;', question: 'Were there any patch and paints required?',          hint: 'Select Yes and note the location if any walls needed patching.',     type: 'yesno' },
+  { id: 'damage',     name: 'Property Damage',     icon: '&#9888;',   question: 'Did we damage the property at all?',                  hint: 'Be honest - note the location and nature of any damage caused.',     type: 'yesno' },
+  { id: 'secured',    name: 'House Secured',       icon: '&#128274;', question: 'Have you secured the house?',                         hint: 'Confirm both the back door and front door are locked.',               type: 'yesno' },
+  { id: 'lights',     name: 'Lights and Air Con',  icon: '&#128161;', question: 'Have you turned off the lights and air conditioning?', hint: 'Check all rooms including garage and outdoor lights.',               type: 'yesno' },
+  { id: 'keys',       name: 'Keys Location',       icon: '&#128273;', question: 'Where have you left the keys?',                       hint: 'Describe exactly - lockbox, letterbox, with agent, etc.',            type: 'text'  }
 ];
 
-let cData    = {};
-const cP     = makePhotoHandlers('c-');
-let cCurrent = 0;
+var cData  = {};
+var cStore = makePhotoStore('c-');
+var cCur   = 0;
 
-window.cRemovePhoto = (id, idx) => { cP.remove(id, idx); };
+window.cRemovePhoto = function(id, idx) { cStore.remove(id, idx); };
 
-function cBuildScreens() {
-  const ref = document.getElementById('c-screen-6');
-  QUESTIONS.forEach((q, i) => {
-    cP.init(q.id);
+(function buildCompletionScreens() {
+  var ref = document.getElementById('c-screen-6');
+  QUESTIONS.forEach(function(q, i) {
+    cStore.init(q.id);
     cData[q.id] = { answer: null, notes: '', text: '' };
-    const el = document.createElement('div');
-    el.className = 'screen';
-    el.id = `c-screen-${i + 1}`;
-
-    const answerBlock = q.type === 'yesno' ? `
-      <div class="yn-row">
-        <button class="yn-btn" id="c-yn-${q.id}-yes" onclick="cSetAnswer('${q.id}','yes')"><span class="yi">✅</span>Yes</button>
-        <button class="yn-btn" id="c-yn-${q.id}-no"  onclick="cSetAnswer('${q.id}','no')"><span class="yi">❌</span>No</button>
-      </div>
-      <label>Notes <span style="font-weight:400;color:#bbb">(optional)</span></label>
-      <textarea id="c-notes-${q.id}" placeholder="Add any details here..."></textarea>
-    ` : `
-      <label>Location / Details</label>
-      <input type="text" id="c-text-${q.id}" placeholder="e.g. Lockbox on front gate, code 1234">
-      <div style="margin-top:12px"></div>
-      <label>Notes <span style="font-weight:400;color:#bbb">(optional)</span></label>
-      <textarea id="c-notes-${q.id}" placeholder="Any additional details..."></textarea>
-    `;
-
-    el.innerHTML = `
-      <div class="card">
-        <div class="step-chip">Step ${i + 2} of 7</div>
-        <div class="q-header">
-          <div class="q-icon-wrap">${q.icon}</div>
-          <div class="q-title"><h2>${q.question}</h2><p>${q.hint}</p></div>
-        </div>
-        ${answerBlock}
-        <div style="margin-top:16px">
-          <div class="photo-label-row">
-            <label style="margin:0">Photos <span style="font-weight:400;color:#bbb">(optional)</span></label>
-            <span class="photo-count-badge" id="c-photoCount-${q.id}"></span>
-          </div>
-          <div class="upload-zone" onclick="document.getElementById('c-fi-${q.id}').click()">
-            <input type="file" id="c-fi-${q.id}" multiple accept="image/*" capture="environment" onchange="cP.add('${q.id}',this)">
-            <div class="cam-icon">📷</div>
-            <p>Tap to take or upload photos</p>
-            <span class="upload-btn-inline">Add Photos</span>
-          </div>
-          <div class="photo-grid" id="c-pg-${q.id}"></div>
-        </div>
-      </div>
-      <div class="nav-row">
-        <button class="btn btn-back" onclick="cGoTo(${i})">← Back</button>
-        <button class="btn btn-primary" onclick="cGoTo(${i + 2})">Next →</button>
-      </div>`;
+    var answerBlock = q.type === 'yesno'
+      ? '<div class="yn-row"><button class="yn-btn" id="c-yn-' + q.id + '-yes" onclick="cSetAnswer(\'' + q.id + '\',\'yes\')"><span class="yi">&#9989;</span>Yes</button><button class="yn-btn" id="c-yn-' + q.id + '-no" onclick="cSetAnswer(\'' + q.id + '\',\'no\')"><span class="yi">&#10060;</span>No</button></div><label>Notes <span style="font-weight:400;color:#bbb">(optional)</span></label><textarea id="c-notes-' + q.id + '" placeholder="Add details..."></textarea>'
+      : '<label>Location / Details</label><input type="text" id="c-text-' + q.id + '" placeholder="e.g. Lockbox on front gate, code 1234"><div style="margin-top:12px"></div><label>Notes <span style="font-weight:400;color:#bbb">(optional)</span></label><textarea id="c-notes-' + q.id + '" placeholder="Additional details..."></textarea>';
+    var el = document.createElement('div');
+    el.className = 'screen'; el.id = 'c-screen-' + (i + 1);
+    el.innerHTML = '<div class="card"><div class="step-chip">Step ' + (i + 2) + ' of 7</div><div class="q-header"><div class="q-icon-wrap">' + q.icon + '</div><div class="q-title"><h2>' + q.question + '</h2><p>' + q.hint + '</p></div></div>' + answerBlock + '<div style="margin-top:16px"><div class="photo-label-row"><label style="margin:0">Photos <span style="font-weight:400;color:#bbb">(optional)</span></label><span class="photo-count-badge" id="c-photoCount-' + q.id + '"></span></div><div class="upload-zone" onclick="document.getElementById(\'c-fi-' + q.id + '\').click()"><input type="file" id="c-fi-' + q.id + '" multiple accept="image/*" onchange="cStore.add(\'' + q.id + '\',this)"><div class="cam-icon">&#128247;</div><p>Tap to take or upload photos</p><span class="upload-btn-inline">Add Photos</span></div><div class="photo-grid" id="c-pg-' + q.id + '"></div></div></div><div class="nav-row"><button class="btn btn-back" onclick="cGoTo(' + i + ')">Back</button><button class="btn btn-primary" onclick="cGoTo(' + (i + 2) + ')">Next</button></div>';
     ref.parentNode.insertBefore(el, ref);
   });
-}
-cBuildScreens();
+})();
 
 function cSetAnswer(id, val) {
   cData[id].answer = val;
-  ['yes','no'].forEach(v => {
-    document.getElementById(`c-yn-${id}-${v}`).className = 'yn-btn' + (v === val ? ` active-${v}` : '');
+  ['yes','no'].forEach(function(v) {
+    document.getElementById('c-yn-' + id + '-' + v).className = 'yn-btn' + (v === val ? ' active-' + v : '');
   });
 }
 
 function cGoTo(n) {
-  document.querySelectorAll('#form-completion .screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(`c-screen-${n}`).classList.add('active');
-  cCurrent = n;
-  updateProgress(n, 7);
-  window.scrollTo(0, 0);
+  document.querySelectorAll('#form-completion .screen').forEach(function(s) { s.classList.remove('active'); });
+  document.getElementById('c-screen-' + n).classList.add('active');
+  cCur = n; updateProgress(n, 7); window.scrollTo(0, 0);
   if (n === 6) cBuildSummary();
 }
 
@@ -633,42 +573,35 @@ function cBegin() {
 
 function ynBadge(v) {
   if (!v) return '<span class="badge badge-na">Not answered</span>';
-  return v === 'yes' ? '<span class="badge badge-yes">✅ Yes</span>' : '<span class="badge badge-no">❌ No</span>';
+  return v === 'yes' ? '<span class="badge badge-yes">Yes</span>' : '<span class="badge badge-no">No</span>';
 }
 
 function cBuildSummary() {
-  QUESTIONS.forEach(q => {
-    cData[q.id].notes = document.getElementById(`c-notes-${q.id}`)?.value || '';
-    if (q.type === 'text') cData[q.id].text = document.getElementById(`c-text-${q.id}`)?.value || '';
+  QUESTIONS.forEach(function(q) {
+    cData[q.id].notes = (document.getElementById('c-notes-' + q.id) || {}).value || '';
+    if (q.type === 'text') cData[q.id].text = (document.getElementById('c-text-' + q.id) || {}).value || '';
   });
-  let html = `
-    <div class="summary-row"><span class="sum-label">Property</span><span class="sum-val">${document.getElementById('c-propAddress').value}</span></div>
-    <div class="summary-row"><span class="sum-label">Team Member</span><span class="sum-val">${document.getElementById('c-propName').value}</span></div>
-    <div class="summary-row"><span class="sum-label">Completion Time</span><span class="sum-val">${document.getElementById('c-propTime').value}</span></div>
-  `;
-  QUESTIONS.forEach(q => {
-    const d = cData[q.id], n = cP.count(q.id);
-    const valDisplay = q.type === 'text'
-      ? `<span style="color:#1a1a1a">${d.text || '—'}</span>`
-      : ynBadge(d.answer);
-    html += `<div class="summary-row">
-      <span class="sum-label">${q.icon} ${q.name}</span>
-      <span class="sum-val">${valDisplay}
-        ${n ? `<br><small style="color:#aaa;font-weight:400">${n} photo${n!==1?'s':''}</small>` : ''}
-        ${d.notes ? `<br><small style="color:#666;font-weight:400">${d.notes}</small>` : ''}
-      </span></div>`;
+  var html = '<div class="summary-row"><span class="sum-label">Property</span><span class="sum-val">' + document.getElementById('c-propAddress').value + '</span></div>' +
+    '<div class="summary-row"><span class="sum-label">Team Member</span><span class="sum-val">' + document.getElementById('c-propName').value + '</span></div>' +
+    '<div class="summary-row"><span class="sum-label">Completion Time</span><span class="sum-val">' + document.getElementById('c-propTime').value + '</span></div>';
+  QUESTIONS.forEach(function(q) {
+    var d = cData[q.id], n = cStore.count(q.id);
+    var valDisplay = q.type === 'text' ? '<span style="color:#1a1a1a">' + (d.text || '-') + '</span>' : ynBadge(d.answer);
+    html += '<div class="summary-row"><span class="sum-label">' + q.name + '</span><span class="sum-val">' + valDisplay +
+      (n ? '<br><small style="color:#aaa;font-weight:400">' + n + ' photo' + (n!==1?'s':'') + '</small>' : '') +
+      (d.notes ? '<br><small style="color:#666;font-weight:400">' + d.notes + '</small>' : '') + '</span></div>';
   });
   document.getElementById('c-summaryContent').innerHTML = html;
 }
 
 async function cSubmit() {
-  const btn = document.getElementById('c-submitBtn');
-  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>Submitting…';
-  QUESTIONS.forEach(q => {
-    cData[q.id].notes = document.getElementById(`c-notes-${q.id}`)?.value || '';
-    if (q.type === 'text') cData[q.id].text = document.getElementById(`c-text-${q.id}`)?.value || '';
+  var btn = document.getElementById('c-submitBtn');
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>Submitting...';
+  QUESTIONS.forEach(function(q) {
+    cData[q.id].notes = (document.getElementById('c-notes-' + q.id) || {}).value || '';
+    if (q.type === 'text') cData[q.id].text = (document.getElementById('c-text-' + q.id) || {}).value || '';
   });
-  const payload = {
+  var payload = {
     formType:        'completion',
     address:         document.getElementById('c-propAddress').value,
     inspector:       document.getElementById('c-propName').value,
@@ -683,49 +616,27 @@ async function cSubmit() {
     lightsNotes:     cData.lights.notes,
     keysLocation:    cData.keys.text,
     keysNotes:       cData.keys.notes,
-    photoCounts:     Object.fromEntries(QUESTIONS.map(q => [q.id, cP.count(q.id)])),
+    photos:          {}
   };
+  QUESTIONS.forEach(function(q) { payload.photos[q.id] = cStore.all(q.id); });
   cGoTo(7);
-  document.getElementById('c-successTime').textContent = `Completed at ${new Date().toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'})}`;
+  document.getElementById('c-successTime').textContent = 'Completed at ' + new Date().toLocaleTimeString('en-AU', {hour:'2-digit',minute:'2-digit'});
   await postReport('c-intStatuses', cfg().completionWebhook, payload);
 }
 
 function cStartOver() {
-  QUESTIONS.forEach(q => {
+  QUESTIONS.forEach(function(q) {
     cData[q.id] = { answer: null, notes: '', text: '' };
-    cP.photos[q.id] = []; cP.render(q.id);
-    if (q.type === 'yesno') ['yes','no'].forEach(v => { const b = document.getElementById(`c-yn-${q.id}-${v}`); if(b) b.className='yn-btn'; });
-    const ta = document.getElementById(`c-notes-${q.id}`); if(ta) ta.value='';
-    const tx = document.getElementById(`c-text-${q.id}`); if(tx) tx.value='';
+    cStore.data[q.id] = []; renderGrid('c-', q.id, cStore.data);
+    if (q.type === 'yesno') ['yes','no'].forEach(function(v) { var b = document.getElementById('c-yn-' + q.id + '-' + v); if(b) b.className='yn-btn'; });
+    var ta = document.getElementById('c-notes-' + q.id); if(ta) ta.value='';
+    var tx = document.getElementById('c-text-' + q.id); if(tx) tx.value='';
   });
   document.getElementById('c-propAddress').value = '';
   document.getElementById('c-propName').value = '';
   document.getElementById('c-submitBtn').disabled = false;
-  document.getElementById('c-submitBtn').textContent = 'Submit Report ✓';
+  document.getElementById('c-submitBtn').textContent = 'Submit Report';
   cSetTime(); cGoTo(0);
-}
-
-
-// ─────────────────────────────────────────────────────────────
-// SHARED: post to webhook
-// ─────────────────────────────────────────────────────────────
-async function postReport(statusElId, webhookUrl, payload) {
-  const statEl = document.getElementById(statusElId);
-  if (!webhookUrl) {
-    statEl.innerHTML = `<div class="not-configured">⚙️ No webhook configured. Tap the gear icon and paste your Apps Script URL to enable Slack + Google Sheets.</div>`;
-    return;
-  }
-  statEl.innerHTML = `<div class="int-row" id="${statusElId}-row"><div class="dot dot-loading" id="${statusElId}-dot"></div><span id="${statusElId}-txt">Sending to Slack & Google Sheets…</span></div>`;
-  try {
-    const res = await fetch(webhookUrl, { method:'POST', headers:{'Content-Type':'text/plain'}, body: JSON.stringify(payload) });
-    if (res.ok) {
-      document.getElementById(`${statusElId}-dot`).className = 'dot dot-ok';
-      document.getElementById(`${statusElId}-txt`).textContent = 'Sent to Slack & Google Sheets ✓';
-    } else throw new Error(`HTTP ${res.status}`);
-  } catch(e) {
-    document.getElementById(`${statusElId}-dot`).className = 'dot dot-err';
-    document.getElementById(`${statusElId}-txt`).textContent = 'Error: ' + (e.message || String(e));
-  }
 }
 </script>
 </body>
