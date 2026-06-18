@@ -112,7 +112,6 @@
       <div style="font-size:15px;font-weight:800;color:white">Foxy Home Staging</div>
       <div style="font-size:11px;color:rgba(255,255,255,0.85)" id="headerSub">Site Reports</div>
     </div>
-    <button class="gear-btn" onclick="openSettings()">&#9881;</button>
   </div>
   <div class="tab-bar">
     <button class="tab-btn active" id="tab-arrival"    onclick="switchForm('arrival')">Arrival Report</button>
@@ -121,28 +120,6 @@
 </div>
 <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
 
-<!-- Settings -->
-<div class="overlay" id="settingsOverlay" onclick="overlayClickHandler(event)">
-  <div class="drawer">
-    <div class="drawer-header">
-      <h3>Settings</h3>
-      <button class="close-btn" onclick="closeSettings()">x</button>
-    </div>
-    <div class="settings-section">Arrival Report</div>
-    <div class="field-group">
-      <label>Webhook URL</label>
-      <input type="text" id="cfgArrivalWebhook" placeholder="Apps Script web app URL">
-      <div class="hint">Handles Slack + Google Sheets + Drive photo upload for arrival reports.</div>
-    </div>
-    <div class="settings-section">Completion Report</div>
-    <div class="field-group">
-      <label>Webhook URL</label>
-      <input type="text" id="cfgCompletionWebhook" placeholder="Apps Script web app URL (can be same)">
-      <div class="hint">Handles Slack + Google Sheets + Drive photo upload for completion reports.</div>
-    </div>
-    <button class="btn btn-primary" style="margin-top:20px" onclick="saveSettings()">Save Settings</button>
-  </div>
-</div>
 
 <!-- ARRIVAL FORM -->
 <div class="form-view active" id="form-arrival">
@@ -245,25 +222,15 @@
 </div>
 
 <script>
-// SETTINGS
+// SETTINGS - admin only, update URLs here if the Apps Script is ever redeployed
+var ARRIVAL_WEBHOOK    = 'https://script.google.com/macros/s/AKfycbzC2MRLUGqvAtBEiBMGLlNXuJGWxQDLh5nZsQoG-VQeAbYpNHZ0dOw5ZzTtwu1Rcc5kvQ/exec';
+var COMPLETION_WEBHOOK = 'https://script.google.com/macros/s/AKfycbzC2MRLUGqvAtBEiBMGLlNXuJGWxQDLh5nZsQoG-VQeAbYpNHZ0dOw5ZzTtwu1Rcc5kvQ/exec';
+
 function cfg() {
   return {
-    arrivalWebhook:    localStorage.getItem('cfg_arrival_webhook')    || '',
-    completionWebhook: localStorage.getItem('cfg_completion_webhook') || ''
+    arrivalWebhook:    ARRIVAL_WEBHOOK,
+    completionWebhook: COMPLETION_WEBHOOK
   };
-}
-function openSettings() {
-  var c = cfg();
-  document.getElementById('cfgArrivalWebhook').value    = c.arrivalWebhook;
-  document.getElementById('cfgCompletionWebhook').value = c.completionWebhook;
-  document.getElementById('settingsOverlay').classList.add('open');
-}
-function closeSettings() { document.getElementById('settingsOverlay').classList.remove('open'); }
-function overlayClickHandler(e) { if (e.target === document.getElementById('settingsOverlay')) closeSettings(); }
-function saveSettings() {
-  localStorage.setItem('cfg_arrival_webhook',    document.getElementById('cfgArrivalWebhook').value.trim());
-  localStorage.setItem('cfg_completion_webhook', document.getElementById('cfgCompletionWebhook').value.trim());
-  closeSettings();
 }
 
 // TAB SWITCHING
